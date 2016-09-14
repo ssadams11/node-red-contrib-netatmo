@@ -5,7 +5,7 @@
   },
   "name": "node-red-contrib-netatmo",
   "description": "Connect to Netatmo devices.  See http://netatmo.com, https://dev.netatmo.com/doc",
-git: "https://github.com/ssadams11/node-red-contrib-netatmo"
+"git": "https://github.com/ssadams11/node-red-contrib-netatmo",
   "dependencies": {
     "netatmo": "1.5.0",
     "mustache": "2.2.1"
