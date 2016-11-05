@@ -1,0 +1,343 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get next events");
+    RED.nodes.registerType('get next events',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"},
+            home_id: {value:""},
+            event_id: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return this.name||"get next events";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get next events">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-home_id"><i class="icon-tag"></i> Home ID:</label>
+        <input type="text" id="node-input-home_id" placeholder="577fff..."">
+    </div>
+    <div class="form-row">
+        <label for="node-input-event_id"><i class="icon-tag"></i> Event ID:</label>
+        <input type="text" id="node-input-event_id" placeholder="57816...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get next events">
+   <p>This node returns information about the netatmo welcome next events with these credentials.</p>
+   <p>Parameters:</p>
+   <ul>
+        <li>Home ID: something like 577fff842baa3c18948b4571</li>
+        <li>Event ID: something like 5781611045a1e322938b458f</li>
+   </ul>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/getnextevents" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/getnextevents</a> for details on format</p>
+</script>
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get camera picture");
+    RED.nodes.registerType('get camera picture',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"},
+            image_id: {value:""},
+            key: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return this.name||"get camera picture";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get camera picture">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-image_id"><i class="icon-tag"></i> Image ID</label>
+        <input type="text" id="node-input-image_id" placeholder="56c89c83...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-key"><i class="icon-tag"></i> Security Key</label>
+        <input type="text" id="node-input-key" placeholder="8627b4...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get camera picture">
+   <p>This node returns information about the netatmo welcome camera picture with these credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicture" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicturer</a> for details on format</p>
+</script>
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get home data");
+    RED.nodes.registerType('get home data',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return this.name||"get home data";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get home data">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get home data">
+   <p>This node returns information about the netatmo welcome home data with these credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata</a> for details on format</p>
+</script>
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get user");
+    RED.nodes.registerType('get user',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return this.name||"get user";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get user">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get user">
+   <p>This node returns information about the netatmo user with these credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/doc/methods/getuser" target=_blank>https://dev.netatmo.com/doc/methods/getuser</a> for details on format</p>
+</script>
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get measurements");
+    RED.nodes.registerType('get measurements',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            beginDate: {value: ''},
+            endDate: {value: ''},
+            limit: {value: ''},
+            scale: {value:"max"},
+            types: {value:'Temperature,CO2,Humidity,Pressure,Noise'},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "get "+this.types+' measurements \n over '+this.scale||"get measurements";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get measurements">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-scale"><i class="icon-tag"></i> Scale</label>
+        <select id="node-input-scale" value="max">
+           <option value="max">max</option>
+          <option value="30min">30min</option>
+          <option value="1hour">1hour</option>
+          <option value="1day">1day</option>
+          <option value="1week">1week</option>
+          <option value="1month">1month</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-types" title="any mix of Temperature,CO2,Humidity,Pressure,Noise or {{payload...}}"><i class="icon-tag"></i> Type</label>
+        <input type="text" id="node-input-types" value="Temperature,CO2,Humidity,Pressure,Noise">
+    </div>
+    <div class="form-row">
+        <label for="node-input-beginDate" title="millisecond count or {{payload...}}"><i class="icon-tag"></i> Begin Date</label>
+        <input type="text" id="node-input-beginDate" placeholder="1471615887629">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endDate" title="millisecond count or {{payload...}}"><i class="icon-tag"></i> End Date</label>
+        <input type="text" id="node-input-endDate" placeholder="last">
+    </div>
+    <div class="form-row">
+        <label for="node-input-limit" title="1..1024 or {{payload...}}"><i class="icon-tag"></i> Limit (max 1024)</label>
+        <input type="text" id="node-input-limit" placeholder="100">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get measurements">
+   <p>This node returns measurements from a device with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/doc/methods/getmeasure" target=_blank>https://dev.netatmo.com/doc/methods/getmeasure</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get device list");
+    RED.nodes.registerType('get device list',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "get device list";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get device list">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get device list">
+   <p>This node returns a list of devices associated with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/doc/methods/devicelist" target=_blank>https://dev.netatmo.com/doc/methods/devicelist</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo config node");
+        RED.nodes.registerType('configNode',{
+            category: 'config',
+            defaults: {
+                client_id: {value:"",required:true},
+                client_secret: {value:"",required:true},
+                username: {value:"",required:true},
+                password: {value:"",required:true},
+                device_id: {value:"",required:true},
+		module_id: {value:"",required:false},
+            },
+            label: function() {
+                return "netatmo device: "+this.device_id;
+            }
+        });
+
+</script>
+
+<script type="text/x-red" data-template-name="configNode">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Client ID</label>
+        <input type="text" id="node-config-input-client_id" placeholder="56e984c449c7...">
+    </div>
+   <div class="form-row">
+        <label for="node-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
+        <input type="text" id="node-config-input-client_secret" placeholder="X4l1Ct9G....">
+    </div>
+   <div class="form-row">
+        <label for="node-input-username"><i class="icon-tag"></i> User name</label>
+        <input type="text" id="node-config-input-username" placeholder="your@email.com">
+    </div>
+   <div class="form-row">
+        <label for="node-input-password"><i class="icon-tag"></i> Password</label>
+        <input type="text" id="node-config-input-password" placeholder="yourPassword">
+    </div>
+   <div class="form-row">
+        <label for="node-input-device_id"><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-config-input-device_id" placeholder="70:ee:.....">
+    </div>
+    <div class="form-row">
+        <label for="node-input-module_id"><i class="icon-tag"></i> Module ID</label>
+        <input type="text" id="node-config-input-module_id" placeholder="70:ee:.....">
+    </div>
+
+</script>

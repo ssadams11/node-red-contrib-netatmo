@@ -155,10 +155,16 @@ module.exports = function(RED) {
                 scale: config.scale,
                 type: this.types
             };
+
             if ((this.beginDate !== '')&&(this.beginDate !== null)){
                 options.date_begin = JSON.parse(this.beginDate)
             }
-            if ((this.endDate !== '')&&(this.endDate !== null)){
+
+            if (this.creds.module_id !== ''){
+                options.module_id = this.creds.module_id
+            }
+            
+	    if ((this.endDate !== '')&&(this.endDate !== null)){
                 options.date_end = (this.endDate === 'last' ? 'last' : JSON.parse(this.endDate))
             }
             if ((this.limit !== '')&&(this.limit !== null)){
@@ -205,6 +211,7 @@ module.exports = function(RED) {
         this.username = n.username;
         this.password = n.password;
         this.device_id = n.device_id;
+        this.module_id = n.module_id;
     }
     RED.nodes.registerType("configNode",NetatmoConfigNode);
 
