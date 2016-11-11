@@ -102,31 +102,7 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get home data",NetatmoGetHomeData);
-    /***************************************************************/
-    function NetatmoGetUser(config) {
-
-        RED.nodes.createNode(this,config);
-        this.creds = RED.nodes.getNode(config.creds);
-        var node = this;
-        this.on('input', function(msg) {
-            var netatmo = require('netatmo');
-
-            var auth = {
-                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
-                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
-                "username": this.creds.username,  
-                "password": this.creds.password  
-            };
-            var api = new netatmo(auth);
-            api.getUser(function(err, user) {
-                msg.payload = user;
-                node.send(msg);
-            });
-        });
-
-    }
-    RED.nodes.registerType("get user",NetatmoGetUser);
-    /***************************************************************/
+   /***************************************************************/
     function NetatmoGetMeasure(config) {
 
         RED.nodes.createNode(this,config);
@@ -174,7 +150,7 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("get measurements",NetatmoGetMeasure);
     /***************************************************************/
-    function NetatmoGetDeviceList(config) {
+    function NetatmoGetStationsData(config) {
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
@@ -189,14 +165,14 @@ module.exports = function(RED) {
                 "password": this.creds.password 
             };
             var api = new netatmo(auth);
-            api.getDevicelist(function(err, devices, modules) {
-                msg.payload = {devices:devices, modules:modules};
+            api.getStationsData(function(err, devices) {
+                msg.payload = {devices:devices};
                 node.send(msg);
             });
         });
 
     }
-    RED.nodes.registerType("get device list",NetatmoGetDeviceList);
+    RED.nodes.registerType("get stations data",NetatmoGetStationsData);
     /***************************************************************/
     function NetatmoConfigNode(n) {
         RED.nodes.createNode(this,n);
