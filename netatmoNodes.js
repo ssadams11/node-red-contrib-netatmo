@@ -39,6 +39,15 @@ module.exports = function(RED) {
                 home_id: node.home_id,
                 event_id: node.event_id
             };
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });            
+            
             api.getNextEvents(options, function(err, events) {
                 msg.payload = events;
                 node.send(msg);
@@ -65,6 +74,15 @@ module.exports = function(RED) {
                 "password": this.creds.password  
             };
             var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
             var options = {
                 image_id: node.image_id,
                 key: node.key
@@ -94,6 +112,15 @@ module.exports = function(RED) {
                 "password": this.creds.password  
             };
             var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
             api.getHomeData(function(err, data) {
                 msg.payload = data;
                 node.send(msg);
@@ -126,6 +153,15 @@ module.exports = function(RED) {
                 "password": this.creds.password 
             };
             var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
             var options = {
                 device_id: this.creds.device_id,
                 scale: config.scale,
@@ -165,6 +201,15 @@ module.exports = function(RED) {
                 "password": this.creds.password 
             };
             var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
             api.getStationsData(function(err, devices) {
                 msg.payload = {devices:devices};
                 node.send(msg);
