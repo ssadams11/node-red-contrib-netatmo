@@ -168,13 +168,13 @@ module.exports = function(RED) {
                 type: this.types
             };
             if ((this.beginDate !== '')&&(this.beginDate !== null)){
-                options.date_begin = JSON.parse(this.beginDate)
+                options.date_begin = JSON.parse(this.beginDate);
             }
             if ((this.endDate !== '')&&(this.endDate !== null)){
-                options.date_end = (this.endDate === 'last' ? 'last' : JSON.parse(this.endDate))
+                options.date_end = (this.endDate === 'last' ? 'last' : JSON.parse(this.endDate));
             }
             if ((this.limit !== '')&&(this.limit !== null)){
-                options.limit = JSON.parse(this.limit)
+                options.limit = JSON.parse(this.limit);
             }
 
                api.getMeasure(options,function(err, measure) {
