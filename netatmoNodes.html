@@ -259,6 +259,74 @@
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
+    console.log("registering netatmo get public data");
+    RED.nodes.registerType('get public data',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            lat_ne: {value: '15'},
+            lon_ne: {value: '20'},
+            lat_sw: {value: '-15'},
+            lon_sw: {value: '-20'},
+            required_data: {value:'rain,humidity'},
+            filter: {value:"false"},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "get public data";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get public data">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lat_ne"><i class="icon-tag"></i> Latitude noth-east corner</label>
+        <input type="text" id="node-input-lat_ne" value="15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lon_ne"><i class="icon-tag"></i> Longitude noth-east corner</label>
+        <input type="text" id="node-input-lon_ne" value="20">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lat_sw"><i class="icon-tag"></i> Latitude south-west corner</label>
+        <input type="text" id="node-input-lat_sw" value="-15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lon_sw"><i class="icon-tag"></i> Longitude south-west corner</label>
+        <input type="text" id="node-input-lon_sw" value="-20">
+    </div>
+    <div class="form-row">
+        <label for="node-input-required_data" title="any mix of Temperature,CO2,Rain,Humidity,Pressure,Noise"><i class="icon-tag"></i> Required data</label>
+        <input type="text" id="node-input-required_data" value="rain,humidity">
+    </div>
+    <div class="form-row">
+        <label for="node-input-filter"><i class="icon-tag"></i> Filter</label>
+        <input type="text" id="node-input-filter" value="false">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get public data">
+   <p>This node returns public data from netatmo with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/weatherapi/getpublicdata" target=_blank>https://dev.netatmo.com/resources/technical/reference/weatherapi/getpublicdata</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
     console.log("registering netatmo config node");
         RED.nodes.registerType('configNode',{
             category: 'config',
