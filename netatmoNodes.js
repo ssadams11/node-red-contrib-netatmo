@@ -219,6 +219,59 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("get stations data",NetatmoGetStationsData);
     /***************************************************************/
+    function NetatmoGetPublicData(config) {
+        RED.nodes.createNode(this,config);
+        this.creds = RED.nodes.getNode(config.creds);
+        var node = this;
+        this.on('input', function(msg) {
+            config.lat_ne = config.lat_ne || '15';
+            config.lon_ne = config.lon_ne || '20';
+            config.lat_sw = config.lat_sw || '-15';
+            config.lon_sw = config.lon_sw || '-20';
+            config.required_data = config.required_data || 'rain,humidity';
+            config.filter = config.filter || false;
+            this.lat_ne = mustache.render(config.lat_ne, msg);
+            this.lon_ne = mustache.render(config.lon_ne, msg);
+            this.lat_sw = mustache.render(config.lat_sw, msg);
+            this.lon_sw = mustache.render(config.lon_sw, msg);
+            this.required_data = mustache.render(config.required_data, msg);
+            this.filter = mustache.render(config.filter, msg);
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
+                "username": this.creds.username,
+                "password": this.creds.password 
+            };
+            var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
+            var options = {
+                lat_ne: config.lat_ne,
+                lon_ne: config.lon_ne,
+                lat_sw: config.lat_sw,
+                lon_sw: config.lon_sw,
+                required_data: config.required_data,
+                filter: config.filter,
+            };
+
+               api.getPublicData(options,function(err, data) {
+                msg.payload = data;
+                node.send(msg);
+            });
+        });
+
+    }
+    RED.nodes.registerType("get public data",NetatmoGetPublicData);
+    /***************************************************************/
     function NetatmoConfigNode(n) {
         RED.nodes.createNode(this,n);
         this.client_id = n.client_id;
