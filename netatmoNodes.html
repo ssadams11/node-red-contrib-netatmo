@@ -162,7 +162,8 @@
             limit: {value: ''},
             scale: {value:"max"},
             types: {value:'Temperature,CO2,Humidity,Pressure,Noise'},
-            creds: {value:"",type:"configNode"}
+            creds: {value:"",type:"configNode"},
+            moduleId: {value: ''}
         },
         inputs:1,
         outputs:1,
@@ -204,6 +205,10 @@
     <div class="form-row">
         <label for="node-input-limit" title="1..1024 or {{payload...}}"><i class="icon-tag"></i> Limit (max 1024)</label>
         <input type="text" id="node-input-limit" placeholder="100">
+    </div>
+    <div class="form-row">
+        <label for="node-input-moduleId" title="Mac address of the module you are interested in."><i class="icon-tag"></i> Module ID</label>
+        <input type="text" id="node-input-moduleId" placeholder="70:ee:50:09:f0:xx">
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
