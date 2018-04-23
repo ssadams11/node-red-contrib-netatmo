@@ -136,21 +136,24 @@ module.exports = function(RED) {
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
         this.on('input', function(msg) {
-            config.beginDate = config.beginDate || '';
-            config.endDate = config.endDate || '';
+            config.beginDate = msg.beginDate || config.beginDate || '';
+            config.endDate = msg.endDate || config.endDate || '';
             config.limit = config.limit || '';
+            config.types = msg.types || config.types || '';
+            config.moduleId = msg.moduleId || config.moduleId || '';
             this.beginDate = mustache.render(config.beginDate, msg);
             this.endDate = mustache.render(config.endDate, msg);
             this.limit = mustache.render(config.limit, msg);
             this.scale = mustache.render(config.scale, msg);
             this.types = mustache.render(config.types, msg);
+            this.moduleId = mustache.render(config.moduleId, msg);
             var netatmo = require('netatmo');
 
             var auth = {
                 "client_id": this.creds.client_id,
                 "client_secret": this.creds.client_secret,
                 "username": this.creds.username,
-                "password": this.creds.password 
+                "password": this.creds.password
             };
             var api = new netatmo(auth);
             
@@ -176,8 +179,11 @@ module.exports = function(RED) {
             if ((this.limit !== '')&&(this.limit !== null)){
                 options.limit = JSON.parse(this.limit);
             }
+            if ((this.moduleId !== '')&&(this.moduleId !== null)){
+                options.module_id = this.moduleId;
+            }
 
-               api.getMeasure(options,function(err, measure) {
+            api.getMeasure(options,function(err, measure) {
                 msg.payload = measure;
                 node.send(msg);
             });
@@ -198,7 +204,7 @@ module.exports = function(RED) {
                 "client_id": this.creds.client_id,
                 "client_secret": this.creds.client_secret,
                 "username": this.creds.username, 
-                "password": this.creds.password 
+                "password": this.creds.password
             };
             var api = new netatmo(auth);
             
