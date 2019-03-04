@@ -232,6 +232,8 @@
         color: '#669966',
         defaults: {
             name: {value:""},
+            deviceId: {value: ''},
+            getFavorites: {value: false},
             creds: {value:"",type:"configNode"}
         },
         inputs:1,
@@ -249,6 +251,14 @@
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
+        <label for="node-input-deviceId" title="Weather station mac address."><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="70:ee:50:09:f0:xx">
+    </div>
+    <div class="form-row">
+        <label for="node-input-getFavorites" title="To retrieve user's favorite weather stations."><i class="icon-tag"></i> Get Favorites</label>
+        <input type="checkbox" id="node-input-getFavorites" placeholder="false">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -259,6 +269,49 @@
    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
    <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo get thermostats data");
+    RED.nodes.registerType('get thermostats data',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            deviceId: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "get thermostats data";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="get thermostats data">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-deviceId" title="Weather station mac address."><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="70:ee:50:09:f0:xx">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="get thermostats data">
+   <p>This node returns the thermostats data associated with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/thermostat/getthermostatsdata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->

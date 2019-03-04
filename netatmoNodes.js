@@ -198,6 +198,9 @@ module.exports = function(RED) {
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
         this.on('input', function(msg) {
+            this.deviceId = msg.deviceId || config.deviceId || '';
+            this.getFavorites = msg.getFavorites || config.getFavorites || false;
+
             var netatmo = require('netatmo');
 
             var auth = {
@@ -216,7 +219,18 @@ module.exports = function(RED) {
                 node.warn(error);
             });                 
             
-            api.getStationsData(function(err, devices) {
+            var options = {
+            };
+
+            if ((this.deviceId !== '')&&(this.deviceId !== null)){
+                options.device_id = this.deviceId;
+            }
+
+            if ((this.getFavorites !== false)&&(this.getFavorites !== null)){
+                options.get_favorites = this.getFavorites;
+            }
+ 
+            api.getStationsData(options,function(err, devices) {
                 msg.payload = {devices:devices};
                 node.send(msg);
             });
@@ -224,6 +238,45 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get stations data",NetatmoGetStationsData);
+    /***************************************************************/
+    function NetatmoGetThermostatsData(config) {
+
+        RED.nodes.createNode(this,config);
+        this.creds = RED.nodes.getNode(config.creds);
+        var node = this;
+        this.on('input', function(msg) {
+            this.deviceId = msg.deviceId || config.deviceId || '';
+
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
+                "username": this.creds.username, 
+                "password": this.creds.password
+            };
+            var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
+            var options = {
+                device_id : this.deviceId
+            };
+ 
+            api.getThermostatsData(options,function(err, devices) {
+                msg.payload = {devices:devices};
+                node.send(msg);
+            });
+        });
+
+    }
+    RED.nodes.registerType("get thermostats data",NetatmoGetThermostatsData);
     /***************************************************************/
     function NetatmoGetPublicData(config) {
         RED.nodes.createNode(this,config);
