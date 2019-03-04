@@ -239,14 +239,15 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("get stations data",NetatmoGetStationsData);
     /***************************************************************/
-    function NetatmoGetThermostatsData(config) {
+    function NetatmoHomesData(config) {
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
         this.on('input', function(msg) {
-            this.deviceId = msg.deviceId || config.deviceId || '';
-
+            this.homeId = msg.homeId || config.homeId || '';
+            this.gatewayTypes = msg.gatewayTypes || config.gatewayTypes || '';
+			
             var netatmo = require('netatmo');
 
             var auth = {
@@ -266,17 +267,68 @@ module.exports = function(RED) {
             });                 
             
             var options = {
-                device_id : this.deviceId
             };
- 
-            api.getThermostatsData(options,function(err, devices) {
-                msg.payload = {devices:devices};
+
+            if ((this.homeId !== '')&&(this.homeId !== null)){
+                options.home_id = this.homeId;
+            }
+
+            if ((this.gatewayTypes !== '')&&(this.gatewayTypes !== null)){
+                options.gateway_types = this.gatewayTypes;
+            }
+			
+            api.homesData(options,function(err, body) {
+                msg.payload = body;
                 node.send(msg);
             });
         });
 
     }
-    RED.nodes.registerType("get thermostats data",NetatmoGetThermostatsData);
+    RED.nodes.registerType("homes data",NetatmoHomesData);
+    /***************************************************************/
+	function NetatmoHomeStatus(config) {
+
+        RED.nodes.createNode(this,config);
+        this.creds = RED.nodes.getNode(config.creds);
+        var node = this;
+        this.on('input', function(msg) {
+            this.homeId = msg.homeId || config.homeId || '';
+            this.deviceTypes = msg.deviceTypes || config.deviceTypes || '';
+			
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
+                "username": this.creds.username, 
+                "password": this.creds.password
+            };
+            var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
+            var options = {
+				options.home_id = this.homeId;
+            };
+
+            if ((this.deviceTypes !== '')&&(this.deviceTypes !== null)){
+                options.deviceTypes = this.deviceTypes;
+            }
+			
+            api.homesStatus(options,function(err, body) {
+                msg.payload = body;
+                node.send(msg);
+            });
+        });
+
+    }
+    RED.nodes.registerType("home status",NetatmoHomeStatus);
     /***************************************************************/
     function NetatmoGetPublicData(config) {
         RED.nodes.createNode(this,config);

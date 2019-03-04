@@ -272,34 +272,38 @@
 </script>
 
 <!-- *************************************************************  -->
-
 <script type="text/javascript">
-    console.log("registering netatmo get thermostats data");
-    RED.nodes.registerType('get thermostats data',{
+    console.log("registering netatmo homes data");
+    RED.nodes.registerType('homes data',{
         category: 'Netatmo',
         color: '#669966',
         defaults: {
             name: {value:""},
-            deviceId: {value: ''},
+            homeId: {value: ''},
+			gatewayTypes: {value: ''},
             creds: {value:"",type:"configNode"}
         },
         inputs:1,
         outputs:1,
         icon: "feed.png",
         label: function() {
-            return "get thermostats data";
+            return "homes data";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="get thermostats data">
+<script type="text/x-red" data-template-name="homes data">
     <div class="form-row">
         <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
-        <label for="node-input-deviceId" title="Weather station mac address."><i class="icon-tag"></i> Device ID</label>
-        <input type="text" id="node-input-deviceId" placeholder="70:ee:50:09:f0:xx">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug">
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -307,11 +311,65 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="get thermostats data">
-   <p>This node returns the thermostats data associated with this username and credentials.</p>
+<script type="text/x-red" data-help-name="homes data">
+   <p>This node returns user's homes and their topology with this username and credentials.</p>
+   <p>gatewayTypes are
+   <ul>
+    <li>Thermostat/Valves : NAPLUG</li>
+    <li>Welcome : NACamera</li>
+    <li>Presence : NOC</li>
+   </ul></p>
    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
    <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/thermostat/getthermostatsdata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata</a> for details on format</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homesdata" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homesdata</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo home status");
+    RED.nodes.registerType('home status',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            homeId: {value: '',required:true},
+			deviceTypes: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "home status";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="home status">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-deviceTypes" title="Array of device type"><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-deviceTypes" placeholder="NAPlug">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="home status">
+   <p>This node returns the current status and data measured for all home devices with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homestatus" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homestatus</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->
