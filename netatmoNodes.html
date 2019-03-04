@@ -298,11 +298,11 @@
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
-        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Device ID</label>
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
         <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
     </div>
     <div class="form-row">
-        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Device ID</label>
+        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Gateway Array</label>
         <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug">
     </div>
     <div class="form-row">
@@ -333,7 +333,7 @@
         color: '#669966',
         defaults: {
             name: {value:""},
-            homeId: {value: '',required:true},
+            homeId: {value: ''},
 			deviceTypes: {value: ''},
             creds: {value:"",type:"configNode"}
         },
@@ -352,11 +352,11 @@
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
-        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Device ID</label>
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
         <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
     </div>
     <div class="form-row">
-        <label for="node-input-deviceTypes" title="Array of device type"><i class="icon-tag"></i> Device ID</label>
+        <label for="node-input-deviceTypes" title="Array of device type"><i class="icon-tag"></i> Device Type Array</label>
         <input type="text" id="node-input-deviceTypes" placeholder="NAPlug">
     </div>
     <div class="form-row">

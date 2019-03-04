@@ -314,14 +314,14 @@ module.exports = function(RED) {
             });                 
             
             var options = {
-				options.home_id = this.homeId;
+				'home_id' : this.homeId,
             };
 
             if ((this.deviceTypes !== '')&&(this.deviceTypes !== null)){
                 options.deviceTypes = this.deviceTypes;
             }
 			
-            api.homesStatus(options,function(err, body) {
+            api.homeStatus(options,function(err, body) {
                 msg.payload = body;
                 node.send(msg);
             });
