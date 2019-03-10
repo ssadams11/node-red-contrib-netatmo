@@ -364,7 +364,12 @@ module.exports = function(RED) {
             };
 
             if ((this.endtime !== '')&&(this.endtime !== null)){
-                options.endtime = this.endtime;
+                if(this.endtime > 1552236804) { // Correction if we got a UNIX Tmestamp
+                  options.endtime = Math.floor(this.endtime / 1000);
+                }
+                else {
+                  options.endtime = this.endtime;
+                }
             }
 			
             api.setThermMode(options);
@@ -382,6 +387,7 @@ module.exports = function(RED) {
             this.homeId = msg.homeId || config.homeId || '';
             this.roomId = msg.roomId || config.roomId || '';
             this.mode = msg.mode || config.mode || '';
+            this.temp = msg.temp || config.temp || '';
             this.endtime = msg.endtime || config.endtime || '';
 			
             var netatmo = require('netatmo');
@@ -413,7 +419,12 @@ module.exports = function(RED) {
             }
 
             if ((this.endtime !== '')&&(this.endtime !== null)){
-                options.endtime = this.endtime;
+                if(this.endtime > 1552236804) { // Correction if we got a UNIX Tmestamp
+                    options.endtime = Math.floor(this.endtime / 1000);
+                  }
+                  else {
+                    options.endtime = this.endtime;
+                  }
             }
 			
             api.setRoomThermPoint(options);
