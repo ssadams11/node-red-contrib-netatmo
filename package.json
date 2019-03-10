@@ -10,7 +10,7 @@
     "url": "git+https://github.com/ssadams11/node-red-contrib-netatmo.git"
   },
   "dependencies": {
-    "netatmo": "2.2.0",
+    "netatmo": "git+http://github.com/floetenbaer/netatmo.git",
     "mustache": "2.2.1"
   },
   "version": "0.2.0",
