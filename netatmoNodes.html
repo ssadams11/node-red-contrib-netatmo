@@ -387,7 +387,7 @@
             creds: {value:"",type:"configNode"}
         },
         inputs:1,
-        outputs:1,
+        outputs:0,
         icon: "feed.png",
         label: function() {
             return "set therm mode";
@@ -420,8 +420,6 @@
 
 <script type="text/x-red" data-help-name="set therm mode">
    <p>This node sets the home heating system to use schedule/ away/ frost guard mode</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/setthermmode" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/setthermmode</a> for details on format</p>
 </script>
 
@@ -442,7 +440,7 @@
             creds: {value:"",type:"configNode"}
         },
         inputs:1,
-        outputs:1,
+        outputs:0,
         icon: "feed.png",
         label: function() {
             return "set room therm point";
@@ -461,7 +459,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-roomId" title="id of room"><i class="icon-tag"></i> Room ID</label>
-        <input type="text" id="node-input-roomId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+        <input type="text" id="node-input-roomId" placeholder="xxxxxxxxxx">
     </div>
     <div class="form-row">
         <label for="node-input-mode" title="The mode you are applying to this room"><i class="icon-tag"></i> Mode</label>
@@ -469,7 +467,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-temp" title="Manual temperature to apply"><i class="icon-tag"></i> Temperature</label>
-        <input type="text" id="node-input-temp" placeholder="manual OR home">
+        <input type="text" id="node-input-temp" placeholder="15">
     </div>
     <div class="form-row">
         <label for="node-input-endtime" title="Endtime"><i class="icon-tag"></i> Endtime</label>
@@ -483,8 +481,6 @@
 
 <script type="text/x-red" data-help-name="set room therm point">
    <p>This node set a manual temperature to a room. or switch back to home mode.</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homestatus" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homestatus</a> for details on format</p>
 </script>
 

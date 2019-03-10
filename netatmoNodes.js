@@ -367,10 +367,7 @@ module.exports = function(RED) {
                 options.endtime = this.endtime;
             }
 			
-            api.setThermMode(options,function(err, body) {
-                msg.payload = body;
-                node.send(msg);
-            });
+            api.setThermMode(options);
         });
 
     }
@@ -383,7 +380,7 @@ module.exports = function(RED) {
         var node = this;
         this.on('input', function(msg) {
             this.homeId = msg.homeId || config.homeId || '';
-            this.room_id = msg.room_id || config.room_id || '';
+            this.roomId = msg.roomId || config.roomId || '';
             this.mode = msg.mode || config.mode || '';
             this.endtime = msg.endtime || config.endtime || '';
 			
@@ -419,10 +416,7 @@ module.exports = function(RED) {
                 options.endtime = this.endtime;
             }
 			
-            api.setRoomThermPoint(options,function(err, body) {
-                msg.payload = body;
-                node.send(msg);
-            });
+            api.setRoomThermPoint(options);
         });
 
     }
