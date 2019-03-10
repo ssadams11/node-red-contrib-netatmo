@@ -232,6 +232,8 @@
         color: '#669966',
         defaults: {
             name: {value:""},
+            deviceId: {value: ''},
+            getFavorites: {value: false},
             creds: {value:"",type:"configNode"}
         },
         inputs:1,
@@ -249,6 +251,14 @@
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
+        <label for="node-input-deviceId" title="Weather station mac address."><i class="icon-tag"></i> Device ID</label>
+        <input type="text" id="node-input-deviceId" placeholder="70:ee:50:09:f0:xx">
+    </div>
+    <div class="form-row">
+        <label for="node-input-getFavorites" title="To retrieve user's favorite weather stations."><i class="icon-tag"></i> Get Favorites</label>
+        <input type="checkbox" id="node-input-getFavorites" placeholder="false">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -259,6 +269,219 @@
    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
    <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+<script type="text/javascript">
+    console.log("registering netatmo homes data");
+    RED.nodes.registerType('homes data',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''},
+			gatewayTypes: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "homes data";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="homes data">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Gateway Array</label>
+        <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="homes data">
+   <p>This node returns user's homes and their topology with this username and credentials.</p>
+   <p>gatewayTypes are
+   <ul>
+    <li>Thermostat/Valves : NAPLUG</li>
+    <li>Welcome : NACamera</li>
+    <li>Presence : NOC</li>
+   </ul></p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homesdata" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homesdata</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo home status");
+    RED.nodes.registerType('home status',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''},
+			deviceTypes: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "feed.png",
+        label: function() {
+            return "home status";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="home status">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-deviceTypes" title="Array of device type"><i class="icon-tag"></i> Device Type Array</label>
+        <input type="text" id="node-input-deviceTypes" placeholder="NAPlug">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="home status">
+   <p>This node returns the current status and data measured for all home devices with this username and credentials.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homestatus" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homestatus</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo set therm mode");
+    RED.nodes.registerType('set therm mode',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''},
+            mode: {value: ''},
+            endtime: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "feed.png",
+        label: function() {
+            return "set therm mode";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="set therm mode">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mode" title="Heating mode"><i class="icon-tag"></i> Heating mode</label>
+        <input type="text" id="node-input-mode" placeholder="schedule or away or hg">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endtime" title="Endtime"><i class="icon-tag"></i> Endtime</label>
+        <input type="text" id="node-input-endtime" placeholder="timestamp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="set therm mode">
+   <p>This node sets the home heating system to use schedule/ away/ frost guard mode</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/setthermmode" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/setthermmode</a> for details on format</p>
+</script>
+
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+    console.log("registering netatmo set room therm point");
+    RED.nodes.registerType('set room therm point',{
+        category: 'Netatmo',
+        color: '#669966',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''},
+            roomId: {value: ''},
+            mode: {value: ''},
+            temp: {value: ''},
+            endtime: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "feed.png",
+        label: function() {
+            return "set room therm point";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="set room therm point">
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
+        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+    </div>
+    <div class="form-row">
+        <label for="node-input-roomId" title="id of room"><i class="icon-tag"></i> Room ID</label>
+        <input type="text" id="node-input-roomId" placeholder="xxxxxxxxxx">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mode" title="The mode you are applying to this room"><i class="icon-tag"></i> Mode</label>
+        <input type="text" id="node-input-mode" placeholder="manual OR home">
+    </div>
+    <div class="form-row">
+        <label for="node-input-temp" title="Manual temperature to apply"><i class="icon-tag"></i> Temperature</label>
+        <input type="text" id="node-input-temp" placeholder="15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endtime" title="Endtime"><i class="icon-tag"></i> Endtime</label>
+        <input type="text" id="node-input-endtime" placeholder="timestamp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="set room therm point">
+   <p>This node set a manual temperature to a room. or switch back to home mode.</p>
+   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homestatus" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homestatus</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->
