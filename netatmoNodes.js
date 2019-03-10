@@ -330,6 +330,104 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("home status",NetatmoHomeStatus);
     /***************************************************************/
+    function NetatmoSetThermMode(config) {
+
+        RED.nodes.createNode(this,config);
+        this.creds = RED.nodes.getNode(config.creds);
+        var node = this;
+        this.on('input', function(msg) {
+            this.homeId = msg.homeId || config.homeId || '';
+            this.mode = msg.mode || config.mode || '';
+            this.endtime = msg.endtime || config.endtime || '';
+			
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
+                "username": this.creds.username, 
+                "password": this.creds.password
+            };
+            var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
+            var options = {
+                home_id : this.homeId,
+                mode : this.mode,
+            };
+
+            if ((this.endtime !== '')&&(this.endtime !== null)){
+                options.endtime = this.endtime;
+            }
+			
+            api.setThermMode(options,function(err, body) {
+                msg.payload = body;
+                node.send(msg);
+            });
+        });
+
+    }
+    RED.nodes.registerType("set therm mode",NetatmoSetThermMode);
+    /***************************************************************/
+    function NetatmoSetRoomThermPoint(config) {
+
+        RED.nodes.createNode(this,config);
+        this.creds = RED.nodes.getNode(config.creds);
+        var node = this;
+        this.on('input', function(msg) {
+            this.homeId = msg.homeId || config.homeId || '';
+            this.room_id = msg.room_id || config.room_id || '';
+            this.mode = msg.mode || config.mode || '';
+            this.endtime = msg.endtime || config.endtime || '';
+			
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
+                "username": this.creds.username, 
+                "password": this.creds.password
+            };
+            var api = new netatmo(auth);
+            
+            api.on("error", function(error) {
+                node.error(error);
+            });
+
+            api.on("warning", function(error) {
+                node.warn(error);
+            });                 
+            
+            var options = {
+                home_id : this.homeId,
+                room_id : this.roomId,
+                mode : this.mode,
+            };
+
+            if ((this.temp !== '')&&(this.temp !== null)){
+                options.temp = this.temp;
+            }
+
+            if ((this.endtime !== '')&&(this.endtime !== null)){
+                options.endtime = this.endtime;
+            }
+			
+            api.setRoomThermPoint(options,function(err, body) {
+                msg.payload = body;
+                node.send(msg);
+            });
+        });
+
+    }
+    RED.nodes.registerType("set room therm point",NetatmoSetRoomThermPoint);
+    /***************************************************************/
     function NetatmoGetPublicData(config) {
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
