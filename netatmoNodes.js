@@ -486,6 +486,54 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("get public data",NetatmoGetPublicData);
     /***************************************************************/
+    function NetatmoSetPersonAway(config) {
+        RED.nodes.createNode(this, config);
+        this.creds = RED.nodes.getNode(config.creds);
+        this.home_id = config.home_id;
+        this.person_id = config.person_id;
+        var node = this;
+        this.on('input', function (msg) {
+            var netatmo = require('netatmo');
+
+            var auth = {
+                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
+                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
+                "username": this.creds.username,
+                "password": this.creds.password
+            };
+            var api = new netatmo(auth);
+            var options = {
+                home_id: node.home_id,
+                person_id: node.person_id
+            };
+
+            if (msg && msg.payload) {
+                // use home id from msg payload
+                if (msg.payload.home_id) {
+                    options.home_id = msg.payload.home_id;
+                }
+                // use person_id id from msg payload
+                if (msg.payload.person_id) {
+                    options.person_id = msg.payload.person_id;
+                }
+            }
+
+            api.on("error", function (error) {
+                node.error(error);
+            });
+
+            api.on("warning", function (error) {
+                node.warn(error);
+            });
+
+            api.setPersonAway(options, function (err, events) {
+                msg.payload = events;
+                node.send(msg);
+            });
+        });
+    }
+    RED.nodes.registerType("set person away",NetatmoSetPersonAway);
+    /***************************************************************/
     function NetatmoConfigNode(n) {
         RED.nodes.createNode(this,n);
         this.client_id = n.client_id;
