@@ -3,17 +3,20 @@
     "name": "Sam Adams",
     "email": "ssadams@us.ibm.com"
   },
-  "name": "node-red-contrib-netatmo",
-  "description": "Connect to Netatmo devices.  See http://netatmo.com, https://dev.netatmo.com/doc",
+  "name": "@ssadams11/node-red-contrib-netatmo",
+  "description": "Connect to Netatmo devices.  See https://netatmo.com, https://dev.netatmo.com/apidocumentation",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ssadams11/node-red-contrib-netatmo.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
     "netatmo": "git+http://github.com/floetenbaer/netatmo.git",
     "mustache": "2.2.1"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "keywords": [
     "node-red",
     "netatmo",
