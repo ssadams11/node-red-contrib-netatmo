@@ -15,6 +15,7 @@
 
 <script type="text/javascript">
     console.log("registering netatmo get next events");
+    /* global RED, $ */
     RED.nodes.registerType('get next events',{
         category: 'Netatmo',
         color: '#87A980',
@@ -35,7 +36,7 @@
 
 <script type="text/x-red" data-template-name="get next events">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -87,7 +88,7 @@
 
 <script type="text/x-red" data-template-name="get camera picture">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -110,7 +111,9 @@
    <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicture" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicturer</a> for details on format</p>
 </script>
-<!-- *************************************************************  -->
+<!-- ************************************************************* 
+     * Api is marked Deprecated by netatmo 
+     ************************************************************* -->
 
 <script type="text/javascript">
     console.log("registering netatmo get home data");
@@ -130,9 +133,9 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="get home data">
+<script type="text/html" data-template-name="get home data">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -141,11 +144,12 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="get home data">
-   <p>This node returns information about the netatmo welcome home data with these credentials.</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata</a> for details on format</p>
+<script type="text/html" data-help-name="get home data">
+    <p><b>Api is marked Deprecated by netatmo!</b></p>
+    <p>This node returns information about the netatmo welcome home data with these credentials.</p>
+    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+    <b>msg.payload</b>. msg.payload is JSON.</p>
+    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->
@@ -172,7 +176,7 @@
 
 <script type="text/x-red" data-template-name="set person away">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -227,7 +231,7 @@
 
 <script type="text/x-red" data-template-name="get measurements">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -298,7 +302,7 @@
 
 <script type="text/x-red" data-template-name="get stations data">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -350,7 +354,7 @@
 
 <script type="text/x-red" data-template-name="get public data">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -393,7 +397,45 @@
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
-    console.log("registering netatmo homes data");
+    function oneditprepareHomeId() {
+        $('#node-input-homeId-scan').click(function()
+        {
+                var current = $('#node-input-homeId').val();
+                $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
+                $('#node-input-homeId').append('<option selected="selected" value="null">Searching for homes...</option>');
+
+                const creds = RED.nodes.node($('#node-input-creds option:selected').val());
+                $.get('netatmo/homes', {client_id: creds.client_id, client_secret: creds.client_secret, username: creds.username, password: creds.password})
+                    .done( function(body) {
+                        const data = JSON.parse(body);
+
+                        if(data.error) {
+                            RED.notify(data.error, { type: "error" });
+                        }
+                        const homes = data.homes;
+                        // RESET OPTIONS
+                        $('#node-input-homeId').empty();
+
+                        if(homes.length <= 0) {
+                            // Create input
+                            $('#node-input-homeId').replaceWith('<input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
+                            $('#node-input-homeId').val(current);
+                            RED.notify("no home found", { type: "error" });
+                        } else {
+                            // Create select
+                            $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
+                            $('#node-input-homeId').append('<option value="">(empty)</option>');
+                            // SET homes AS OPTIONS
+                            homes.forEach(function(home) {
+                                $('#node-input-homeId').append('<option value="' + home.id + '">' + home.name + '</option>');
+                            });
+                            $('#node-input-homeId').val(current);
+                        }
+                    });
+        });
+    }
+
+    // console.log("registering netatmo homes data");
     RED.nodes.registerType('homes data',{
         category: 'Netatmo',
         color: '#FFCC66',
@@ -405,43 +447,73 @@
         },
         inputs:1,
         outputs:1,
-        icon: "font-awesome/fa-thermometer-full",
+        icon: "font-awesome/fa-home",
         label: function() {
-            return "homes data";
+            return this.name||"home data";
+        },
+        oneditprepare: function() {
+            oneditprepareHomeId();
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="homes data">
+<script type="text/html" data-template-name="homes data">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
-        <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
-        <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
+		<label for="node-input-homeId" title="id of home"><i class="fa fa-home"></i> Home ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-homeId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-row">
+        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Gateway Types</label>
+        <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug | NATherm1 | NRV">
     </div>
     <div class="form-row">
-        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Gateway Array</label>
-        <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="homes data">
-   <p>This node returns user's homes and their topology with this username and credentials.</p>
-   <p>gatewayTypes are
-   <ul>
-    <li>Thermostat/Valves : NAPLUG</li>
-    <li>Welcome : NACamera</li>
-    <li>Presence : NOC</li>
-   </ul></p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homesdata" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homesdata</a> for details on format</p>
+<script type="text/html" data-help-name="homes data">
+   <p>This node returns user's homes and their topology for Home+Control, Home+Security and Energy devices.</p>
+   <h3>Inputs</h3>
+   <dl class="message-properties">
+       <dt class="optional">msg.homeId<span class="property-type">string</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Home ID.</dd>
+       <dt class="optional">msg.gatewayTypes<span class="property-type">string, array of strings</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Gateway Types.</dd>
+   </dl>
+   <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">(object)</span>
+        </dt>
+        <dd>see netatmo api details</dd>
+    </dl>
+    <h3>Details</h3>
+    <p>Home ID can be left empty, if <code>msg.homeId</code> is set.</p>
+    <p>Gateway Types an be left empty, if <code>msg.gatewayTypes</code> is set. Gateway Types are</p>
+    <ul>
+        <li>Home+Control : NLP, ...</li>
+        <li>Home+Security: NACamera, NOC, NSD, ...</li>
+        <li>Energy : NAPlug, NATherm1, NRV</li>
+    </ul>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/control#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/control#homesdata</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/security#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/security#homesdata</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/energy#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/energy#homesdata</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->
@@ -459,37 +531,68 @@
         },
         inputs:1,
         outputs:1,
-        icon: "font-awesome/fa-thermometer-full",
+        icon: "font-awesome/fa-home",
         label: function() {
-            return "home status";
+            return this.name||"home status";
+        },
+        oneditprepare: function() {
+            // eslint-disable-next-line no-undef
+            oneditprepareHomeId();
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="home status">
+<script type="text/html" data-template-name="home status">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="icon-tag"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
+		<label for="node-input-homeId" title="id of home"><i class="fa fa-home"></i> Home ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-homeId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <!--div class="form-row">
         <label for="node-input-homeId" title="id of home"><i class="icon-tag"></i> Home ID</label>
         <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX">
-    </div>
+    </div-->
     <div class="form-row">
         <label for="node-input-deviceTypes" title="Array of device type"><i class="icon-tag"></i> Device Type Array</label>
-        <input type="text" id="node-input-deviceTypes" placeholder="NAPlug">
+        <input type="text" id="node-input-deviceTypes" placeholder="NAPlug | NATherm1 | NRV">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="home status">
-   <p>This node returns the current status and data measured for all home devices with this username and credentials.</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/resources/technical/reference/energy/homestatus" target=_blank>https://dev.netatmo.com/resources/technical/reference/energy/homestatus</a> for details on format</p>
+<script type="text/html" data-help-name="home status">
+   <p>This node returns the current status of a home and the associated Home+Control, Home+Security and Energy devices.</p>
+   <h3>Inputs</h3>
+   <dl class="message-properties">
+       <dt class="optional">msg.homeId<span class="property-type">string</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Home ID.</dd>
+   </dl>
+   <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">(object)</span>
+        </dt>
+        <dd>see netatmo api details</dd>
+    </dl>
+    <h3>Details</h3>
+    <p>Home ID can be left empty, if <code>msg.homeId</code> is set.</p>
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/control#homestatus" target=_blank>https://dev.netatmo.com/apidocumentation/control#homestatus</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/security#homestatus" target=_blank>https://dev.netatmo.com/apidocumentation/security#homestatus</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/energy#homestatus" target=_blank>https://dev.netatmo.com/apidocumentation/energy#homestatus</a> for details on format</p>
 </script>
 
 <!-- *************************************************************  -->
@@ -517,7 +620,7 @@
 
 <script type="text/x-red" data-template-name="set therm mode">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -570,7 +673,7 @@
 
 <script type="text/x-red" data-template-name="set room therm point">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Creds</label>
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
@@ -605,44 +708,110 @@
 </script>
 
 <!-- *************************************************************  -->
+<!-- * Configuration Node *  -->
+<!-- *************************************************************  -->
 
 <script type="text/javascript">
-    console.log("registering netatmo config node");
-        RED.nodes.registerType('configNode',{
-            category: 'config',
-            defaults: {
-                client_id: {value:"",required:true},
-                client_secret: {value:"",required:true},
-                username: {value:"",required:true},
-                password: {value:"",required:true},
-                device_id: {value:"",required:true},
-            },
-            label: function() {
-                return "netatmo device: "+this.device_id;
-            }
-        });
+    // console.log("registering netatmo config node");
+    RED.nodes.registerType('configNode',{
+        category: 'config',
+        defaults: {
+            name: {value:""},
+            client_id: {value:"",required:true},
+            client_secret: {value:"",required:true},
+            username: {value:"",required:true},
+            password: {value:"",required:true},
+            device_id: {value:"",required:true},
+        },
+        label: function() {
+            return this.name||"netatmo device: "+this.device_id;
+        },
+        oneditprepare: function() {
+            $('#node-config-input-device_id-scan').click(function()
+            {
+                var current = $('#node-config-input-device_id').val();
+                $('#node-config-input-device_id').replaceWith('<select id="node-config-input-device_id" style="width: 100%"></select>');
+                $('#node-config-input-device_id').append('<option selected="selected" value="null">Searching for devices...</option>');
 
+                const client_id = $('#node-config-input-client_id').val();
+                const client_secret = $('#node-config-input-client_secret').val();
+                const username = $('#node-config-input-username').val();
+                const password = $('#node-config-input-password').val();
+
+                $.get('netatmo/homes', {client_id: client_id, client_secret: client_secret, username: username, password: password})
+                    .done( function(body) {
+                        const data = JSON.parse(body);
+
+                        if(data.error) {
+                            RED.notify(data.error, { type: "error" });
+                        }
+                        const homes = data.homes;
+                        // RESET OPTIONS
+                        $('#node-config-input-device_id').empty();
+
+                        if(homes.length <= 0) {
+                            // Create input
+                            $('#node-config-input-device_id').replaceWith('<input type="text" id="node-config-input-device_id" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
+                            $('#node-config-input-device_id').val(current);
+                            RED.notify("no homes found", { type: "error" });
+                        } else {
+                            // Create select
+                            $('#node-config-input-device_id').replaceWith('<select required id="node-config-input-device_id" style="width: 100%"></select>');
+                            // $('#node-config-input-device_id').append('<option value="">(empty)</option>');
+                            // SET modules AS OPTIONS
+                            homes.forEach(function(home) {
+                                if (home.modules.length >= 0) {
+                                    home.modules.forEach(function(module) {
+                                        $('#node-config-input-device_id').append('<option value="' + module.id + '">' + module.name + ' (' + module.type + ')' + '</option>');
+                                    });
+                                }
+                            });
+                            $('#node-config-input-device_id').val(current);
+                        }
+                    });
+            });
+        }
+    });
 </script>
 
-<script type="text/x-red" data-template-name="configNode">
+<script type="text/html" data-template-name="configNode">
     <div class="form-row">
-        <label for="node-input-client_id"><i class="icon-tag"></i> Client ID</label>
-        <input type="text" id="node-config-input-client_id" placeholder="56e984c449c7...">
+        <label for="node-config-input-client_id"><i class="fa fa-tag"></i> Client ID</label>
+        <input required type="text" id="node-config-input-client_id" placeholder="56e984c449c7...">
     </div>
-   <div class="form-row">
-        <label for="node-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
-        <input type="text" id="node-config-input-client_secret" placeholder="X4l1Ct9G....">
+    <div class="form-tips"><b>Tip:</b> Client ID from App information page in your Netatmo connect Account</div><br/>
+    <div class="form-row">
+        <label for="node-config-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
+        <input required type="text" id="node-config-input-client_secret" placeholder="X4l1Ct9G....">
     </div>
-   <div class="form-row">
-        <label for="node-input-username"><i class="icon-tag"></i> User name</label>
-        <input type="text" id="node-config-input-username" placeholder="your@email.com">
+    <div class="form-tips"><b>Tip:</b> Client secret from App information page in your Netatmo connect Account</div><br/>
+    <div class="form-row">
+        <label for="node-config-input-username"><i class="fa fa-user"></i> User name</label>
+        <input required type="text" id="node-config-input-username" placeholder="your@email.com">
     </div>
-   <div class="form-row">
-        <label for="node-input-password"><i class="icon-tag"></i> Password</label>
-        <input type="text" id="node-config-input-password" placeholder="yourPassword">
+    <div class="form-tips"><b>Tip:</b> User of your Netatmo connect Account</div><br/>
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-lock"></i> Password</label>
+        <input required type="text" id="node-config-input-password" placeholder="yourPassword">
     </div>
-   <div class="form-row">
-        <label for="node-input-device_id"><i class="icon-tag"></i> Device ID</label>
-        <input type="text" id="node-config-input-device_id" placeholder="70:ee:.....">
+    <div class="form-tips"><b>Tip:</b> Password of your Netatmo connect Account</div><br/>
+    <!--div class="form-row">
+        <label for="node-config-input-device_id"><i class="icon-tag"></i> Device ID</label>
+        <input required type="text" id="node-config-input-device_id" placeholder="70:ee:.....">
+    </div-->
+    <div class="form-row">
+		<label for="node-config-input-device_id" title="id of device"><i class="fa fa-home"></i> Device ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-config-input-device_id" placeholder="70:ee:....." style="width: 100%"/>
+            </div>
+            <a id="node-config-input-device_id-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
 </script>

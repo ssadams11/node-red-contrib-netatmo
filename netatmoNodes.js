@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-mustache = require('mustache');
+const mustache = require('mustache');
 module.exports = function(RED) {
     "use strict";
 
@@ -269,11 +269,12 @@ module.exports = function(RED) {
             var options = {
             };
 
-            if ((this.homeId !== '')&&(this.homeId !== null)){
+            // Optional
+            if (this.homeId !== '') {
                 options.home_id = this.homeId;
             }
 
-            if ((this.gatewayTypes !== '')&&(this.gatewayTypes !== null)){
+            if (this.gatewayTypes !== '') {
                 options.gateway_types = this.gatewayTypes;
             }
 			
@@ -285,6 +286,34 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("homes data",NetatmoHomesData);
+
+    // Discover homes with homesData
+	// eslint-disable-next-line no-unused-vars
+	RED.httpAdmin.get('/netatmo/homes', function(req, res, next)
+	{
+        const netatmo = require('netatmo');
+        const creds = req.query;
+        const auth = {
+            client_id: creds.client_id,
+            client_secret: creds.client_secret,
+            username: creds.username, 
+            password: creds.password
+        };
+		const api = new netatmo(auth);
+        api.on("error", function(error) {
+            res.end(JSON.stringify({error:error.message}));
+        });
+
+        api.on("warning", function(error) {
+            res.end(JSON.stringify({error:error.message}));
+        });
+
+        const options = {};
+        api.homesData(options,function(err, body) {
+            res.end(JSON.stringify(body));
+        });
+	});
+
     /***************************************************************/
 	function NetatmoHomeStatus(config) {
 
@@ -297,7 +326,7 @@ module.exports = function(RED) {
 			
             var netatmo = require('netatmo');
 
-            var auth = {
+            const auth = {
                 "client_id": this.creds.client_id,
                 "client_secret": this.creds.client_secret,
                 "username": this.creds.username, 
@@ -317,7 +346,8 @@ module.exports = function(RED) {
 				'home_id' : this.homeId,
             };
 
-            if ((this.deviceTypes !== '')&&(this.deviceTypes !== null)){
+            // Optional
+            if (this.deviceTypes !== ''){
                 options.deviceTypes = this.deviceTypes;
             }
 			
