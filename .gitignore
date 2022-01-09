@@ -1,2 +1,4 @@
 README.html
 CHANGELOG.html
+node_modules
+.DS_Store
