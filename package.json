@@ -34,12 +34,12 @@
     "nodes": {
       "netatmo": "netatmoNodes.js",
       "netatmo-get-stations-data": "netatmo-get-stations-data.js",
+      "netatmo-get-public-data": "netatmo-get-public-data.js",
       "netatmo-get-measurements": "netatmo-get-measurements.js",
-      "netatmo-set-room-therm": "netatmo-set-room-therm.js",
       "netatmo-home-status": "netatmo-home-status.js",
       "netatmo-homes-data": "netatmo-homes-data.js",
-      "netatmo-room-therm-point": "netatmo-set-room-therm-point.js",
-      "netatmo-therm-mode": "netatmo-set-therm-mode.js"
+      "netatmo-set-room-therm-point": "netatmo-set-room-therm-point.js",
+      "netatmo-set-therm-mode": "netatmo-set-therm-mode.js"
     }
   },
   "maintainers": [

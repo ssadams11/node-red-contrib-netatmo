@@ -1,0 +1,79 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<script type="text/javascript">
+    /* global RED */
+    RED.nodes.registerType('get public data',{
+        category: 'Netatmo',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:""},
+            lat_ne: {value: '15'},
+            lon_ne: {value: '20'},
+            lat_sw: {value: '-15'},
+            lon_sw: {value: '-20'},
+            required_data: {value:'rain,humidity'},
+            filter: {value:"false"},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-cloud",
+        label: function() {
+            return this.name || "get public data";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="get public data">
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lat_ne"><i class="fa fa-map-marker"></i> Latitude noth-east corner</label>
+        <input type="text" id="node-input-lat_ne" value="15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lon_ne"><i class="fa fa-map-marker"></i> Longitude noth-east corner</label>
+        <input type="text" id="node-input-lon_ne" value="20">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lat_sw"><i class="fa fa-map-marker"></i> Latitude south-west corner</label>
+        <input type="text" id="node-input-lat_sw" value="-15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-lon_sw"><i class="fa fa-map-marker"></i> Longitude south-west corner</label>
+        <input type="text" id="node-input-lon_sw" value="-20">
+    </div>
+    <div class="form-row">
+        <label for="node-input-required_data"><i class="fa fa-code"></i> Required data</label>
+        <input type="text" id="node-input-required_data" value="temperature | pressure | humidity | rain | wind">
+    </div>
+    <div class="form-row">
+        <label for="node-input-filter"><i class="icon-tag"></i> Filter</label>
+        <input type="text" id="node-input-filter" value="false">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="get public data">
+   <p>This node retrieves publicly shared weather data from Outdoor Modules within a predefined area.</p>
+   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+   <b>msg.payload</b>. msg.payload is JSON.</p>
+   <p>See <a href="https://dev.netatmo.com/apidocumentation/weather#getpublicdata" target=_blank>https://dev.netatmo.com/apidocumentation/weather#getpublicdata</a> for details on format</p>
+</script>
