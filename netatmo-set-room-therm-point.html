@@ -1,0 +1,102 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    /* global RED oneditprepareHomeId oneditprepareRooms */
+    RED.nodes.registerType('set room therm point',{
+        category: 'Netatmo',
+        color: '#FFCC66',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''}, // required but can by sent in msg.homeId
+            roomId: {value: ''}, // required but can by sent in msg.roomId
+            mode: {value: ''}, // required but can by sent in msg.mode
+            temp: {value: ''},
+            endtime: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "font-awesome/fa-thermometer-full",
+        label: function() {
+            return this.name|| "set room therm point";
+        },
+        oneditprepare: function() {
+            oneditprepareHomeId(false);
+            oneditprepareRooms(false);
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="set room therm point">
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+		<label for="node-input-homeId" title="id of home"><i class="fa fa-home"></i> Home ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-homeId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-tips"><b>Tip:</b> can by left blank, use <code>msg.homeId</code></div><br/>
+    <div class="form-row">
+		<label for="node-input-roomId" title="id of room"><i class="fa fa-map-marker"></i> Room ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-roomId" placeholder="xxxxxxxxxx" style="width: 100%"/>
+            </div>
+            <a id="node-input-roomId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-tips"><b>Tip:</b> can by left blank, use <code>msg.roomId</code></div><br/>
+    <div class="form-row">
+        <label for="node-input-mode"><i class="fa fa-code"></i> Mode</label>
+        <select id="node-input-mode" value="manual">
+            <option value="manual">manual</option>
+            <option value="max">max</option>
+            <option value="home">home</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-temp" title="Manual temperature to apply"><i class="fa fa-thermometer-full"></i> Temperature</label>
+        <input type="text" id="node-input-temp" placeholder="15">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endtime" title="Endtime"><i class="fa fa-clock"></i> Endtime</label>
+        <input type="text" id="node-input-endtime" placeholder="timestamp, 2 hours if blank">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="set room therm point">
+    <p>This endpoint permits to control the heating of a specific room. A room can be set in 4 differents modes:</p>
+    <ul>
+        <li>"manual" mode in which setpoints can be applied for a specific duration (use endtime)</li>
+        <li>"max" mode which will put the setpoint at max (30°) for a given duration (default is xx and can be changed by the user in its settings)</li>
+        <li>"home" mode which basically makes the room following the Home mode.</li>
+    </ul>
+   <p>See <a href="https://dev.netatmo.com/apidocumentation/energy#setroomthermpoint" target=_blank>https://dev.netatmo.com/apidocumentation/energy#setroomthermpoint</a> for details on format</p>
+</script>
