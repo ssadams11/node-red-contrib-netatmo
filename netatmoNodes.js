@@ -29,8 +29,8 @@ module.exports = function(RED) {
             var netatmo = require('netatmo');
 
             var auth = {
-                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
-                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
                 "username": this.creds.username,  
                 "password": this.creds.password  
             };
@@ -68,8 +68,8 @@ module.exports = function(RED) {
             var netatmo = require('netatmo');
 
             var auth = {
-                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
-                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
                 "username": this.creds.username,  
                 "password": this.creds.password  
             };
@@ -106,8 +106,8 @@ module.exports = function(RED) {
             var netatmo = require('netatmo');
 
             var auth = {
-                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
-                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret,
                 "username": this.creds.username,  
                 "password": this.creds.password  
             };
@@ -130,68 +130,7 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("get home data",NetatmoGetHomeData);
    /***************************************************************/
-    function NetatmoGetMeasure(config) {
 
-        RED.nodes.createNode(this,config);
-        this.creds = RED.nodes.getNode(config.creds);
-        var node = this;
-        this.on('input', function(msg) {
-            config.beginDate = msg.beginDate || config.beginDate || '';
-            config.endDate = msg.endDate || config.endDate || '';
-            config.limit = config.limit || '';
-            config.types = msg.types || config.types || '';
-            config.moduleId = msg.moduleId || config.moduleId || '';
-            this.beginDate = mustache.render(config.beginDate, msg);
-            this.endDate = mustache.render(config.endDate, msg);
-            this.limit = mustache.render(config.limit, msg);
-            this.scale = mustache.render(config.scale, msg);
-            this.types = mustache.render(config.types, msg);
-            this.moduleId = mustache.render(config.moduleId, msg);
-            var netatmo = require('netatmo');
-
-            var auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username,
-                "password": this.creds.password
-            };
-            var api = new netatmo(auth);
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
-            
-            var options = {
-                device_id: this.creds.device_id, // TODO
-                scale: config.scale,
-                type: this.types
-            };
-            if ((this.beginDate !== '')&&(this.beginDate !== null)){
-                options.date_begin = JSON.parse(this.beginDate);
-            }
-            if ((this.endDate !== '')&&(this.endDate !== null)){
-                options.date_end = (this.endDate === 'last' ? 'last' : JSON.parse(this.endDate));
-            }
-            if ((this.limit !== '')&&(this.limit !== null)){
-                options.limit = JSON.parse(this.limit);
-            }
-            if ((this.moduleId !== '')&&(this.moduleId !== null)){
-                options.module_id = this.moduleId;
-            }
-
-            api.getMeasure(options,function(err, measure) {
-                msg.payload = measure;
-                node.send(msg);
-            });
-        });
-
-    }
-    RED.nodes.registerType("get measurements",NetatmoGetMeasure);
-    /***************************************************************/
     function NetatmoHomesData(config) {
 
         RED.nodes.createNode(this,config);
@@ -493,15 +432,6 @@ module.exports = function(RED) {
     /***************************************************************/
     function NetatmoConfigNode(config) {
         RED.nodes.createNode(this,config);
-        this.name = config.name;
-        this.deviceId = config.deviceId;
-
-        console.log(config.name);
-        console.log(config.client_id);
-        console.log(config.client_secret);
-        console.log(config.username);
-        console.log(config.password);
-        console.log(config.deviceId);
     }
 
     RED.nodes.registerType("configNode",NetatmoConfigNode,{

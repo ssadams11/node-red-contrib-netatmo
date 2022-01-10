@@ -33,7 +33,8 @@
   "node-red": {
     "nodes": {
       "netatmo": "netatmoNodes.js",
-      "netatmo-get-stations-data": "netatmo-get-stations-data.js"
+      "netatmo-get-stations-data": "netatmo-get-stations-data.js",
+      "netatmo-get-measurements": "netatmo-get-measurements.js"
     }
   },
   "maintainers": [

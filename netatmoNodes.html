@@ -21,13 +21,13 @@
 /* global $ RED */
 // eslint-disable-next-line no-unused-vars
 function oneditprepareDeviceId(required, typeFilter = null) {
-    $('#node-config-input-deviceId-scan').click(function()
+    $('#node-input-deviceId-scan').click(function()
     {
         const nodeIdCred = $('#node-input-creds option:selected').val();
 
-        const current = $('#node-config-input-deviceId').val();
-        $('#node-config-input-deviceId').replaceWith('<select id="node-config-input-deviceId" style="width: 100%"></select>');
-        $('#node-config-input-deviceId').append('<option selected="selected" value="null">Searching for devices...</option>');
+        const current = $('#node-input-deviceId').val();
+        $('#node-input-deviceId').replaceWith('<select id="node-input-deviceId" style="width: 100%"></select>');
+        $('#node-input-deviceId').append('<option selected="selected" value="null">Searching for devices...</option>');
 
         $.get('netatmo/homes', {nodeIdCred:nodeIdCred})
             .done( function(body) {
@@ -38,30 +38,30 @@ function oneditprepareDeviceId(required, typeFilter = null) {
                 }
                 const homes = data.homes;
                 // RESET OPTIONS
-                $('#node-config-input-deviceId').empty();
+                $('#node-input-deviceId').empty();
 
                 if(homes.length <= 0) {
                     // Create input
-                    $('#node-config-input-deviceId').replaceWith('<input type="text" id="node-config-input-deviceId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
-                    $('#node-config-input-deviceId').val(current);
+                    $('#node-input-deviceId').replaceWith('<input type="text" id="node-input-deviceId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
+                    $('#node-input-deviceId').val(current);
                     RED.notify("no homes found", { type: "error" });
                 } else {
                     // Create select
-                    $('#node-config-input-deviceId').replaceWith('<select required id="node-config-input-deviceId" style="width: 100%"></select>');
+                    $('#node-input-deviceId').replaceWith('<select required id="node-input-deviceId" style="width: 100%"></select>');
                     if (!required) {
-                        $('#node-config-input-deviceId').append('<option value="">(empty)</option>');
+                        $('#node-input-deviceId').append('<option value="">(empty)</option>');
                     }
                     // SET modules AS OPTIONS
                     homes.forEach(function(home) {
                         if (home.modules.length >= 0) {
                             home.modules.forEach(function(module) {
                                 if (!typeFilter || typeFilter === module.type) {
-                                    $('#node-config-input-deviceId').append('<option value="' + module.id + '">' + module.name + ' (' + module.type + ') - ' + module.id + '</option>');
+                                    $('#node-input-deviceId').append('<option value="' + module.id + '">' + module.name + ' (' + module.type + ') - ' + module.id + '</option>');
                                 }
                             });
                         }
                     });
-                    $('#node-config-input-deviceId').val(current);
+                    $('#node-input-deviceId').val(current);
                 }
             });
     });
@@ -301,79 +301,6 @@ function oneditprepareHomeId() {
 </script>
 
 <!-- *************************************************************  -->
-
-<script type="text/javascript">
-    console.log("registering netatmo get measurements");
-    RED.nodes.registerType('get measurements',{
-        category: 'Netatmo',
-        color: '#C0DEED',
-        defaults: {
-            name: {value:""},
-            beginDate: {value: ''},
-            endDate: {value: ''},
-            limit: {value: ''},
-            scale: {value:"max"},
-            types: {value:'Temperature,CO2,Humidity,Pressure,Noise'},
-            creds: {value:"",type:"configNode"},
-            moduleId: {value: ''}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "font-awesome/fa-cloud",
-        label: function() {
-            return "get "+this.types+' measurements \n over '+this.scale||"get measurements";
-        }
-    });
-</script>
-
-<script type="text/x-red" data-template-name="get measurements">
-    <div class="form-row">
-        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
-        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
-    </div>
-    <div class="form-row">
-        <label for="node-input-scale"><i class="icon-tag"></i> Scale</label>
-        <select id="node-input-scale" value="max">
-           <option value="max">max</option>
-          <option value="30min">30min</option>
-          <option value="1hour">1hour</option>
-          <option value="1day">1day</option>
-          <option value="1week">1week</option>
-          <option value="1month">1month</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-types" title="any mix of Temperature,CO2,Humidity,Pressure,Noise or {{payload...}}"><i class="icon-tag"></i> Type</label>
-        <input type="text" id="node-input-types" value="Temperature,CO2,Humidity,Pressure,Noise">
-    </div>
-    <div class="form-row">
-        <label for="node-input-beginDate" title="millisecond count or {{payload...}}"><i class="icon-tag"></i> Begin Date</label>
-        <input type="text" id="node-input-beginDate" placeholder="1471615887629">
-    </div>
-    <div class="form-row">
-        <label for="node-input-endDate" title="millisecond count or {{payload...}}"><i class="icon-tag"></i> End Date</label>
-        <input type="text" id="node-input-endDate" placeholder="last">
-    </div>
-    <div class="form-row">
-        <label for="node-input-limit" title="1..1024 or {{payload...}}"><i class="icon-tag"></i> Limit (max 1024)</label>
-        <input type="text" id="node-input-limit" placeholder="100">
-    </div>
-    <div class="form-row">
-        <label for="node-input-moduleId" title="Mac address of the module you are interested in."><i class="icon-tag"></i> Module ID</label>
-        <input type="text" id="node-input-moduleId" placeholder="70:ee:50:09:f0:xx">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="get measurements">
-   <p>This node returns measurements from a device with this username and credentials.</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/doc/methods/getmeasure" target=_blank>https://dev.netatmo.com/doc/methods/getmeasure</a> for details on format</p>
-</script>
 
 <!-- *************************************************************  -->
 
@@ -734,8 +661,7 @@ function oneditprepareHomeId() {
             password: {type:"password"}
         },
         defaults: {
-            name: {value:""},
-            deviceId: {value:"",required:true},
+            name: {value:""}
         },
         label: function() {
             return this.name||"netatmo configNode";
@@ -768,17 +694,6 @@ function oneditprepareHomeId() {
         <input required type="password" id="node-config-input-password" placeholder="yourPassword">
     </div>
     <div class="form-tips"><b>Tip:</b> Password of your Netatmo connect Account</div><br/>
-    <div class="form-row">
-		<label for="node-config-input-deviceId" title="id of device"><i class="fa fa-home"></i> Device ID</label>
-		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
-            <div style="position: absolute; left: 0px; right: 40px;">
-                <input type="text" id="node-config-input-deviceId" placeholder="70:ee:....." style="width: 100%"/>
-            </div>
-            <a id="node-config-input-deviceId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
-                <i class="fa fa-search"></i>
-            </a>
-        </div>
-	</div>
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">

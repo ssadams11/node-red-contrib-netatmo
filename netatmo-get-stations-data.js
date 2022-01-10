@@ -22,20 +22,20 @@ module.exports = function(RED)
         RED.nodes.createNode(this,config);
         // Retrieve the config node
         this.creds = RED.nodes.getNode(config.creds);
-        var node = this;
+        const node = this;
         this.on('input', function(msg) {
             this.deviceId = msg.deviceId || config.deviceId || '';
             this.getFavorites = msg.getFavorites || config.getFavorites || false;
 
-            var netatmo = require('netatmo');
+            const netatmo = require('netatmo');
 
-            var auth = {
+            const auth = {
                 "client_id": this.creds.credentials.client_id,
                 "client_secret": this.creds.credentials.client_secret,
                 "username": this.creds.credentials.username, 
                 "password": this.creds.credentials.password
             };
-            var api = new netatmo(auth);
+            const api = new netatmo(auth);
             
             api.on("error", function(error) {
                 node.error(error);
