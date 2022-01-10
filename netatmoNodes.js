@@ -166,7 +166,7 @@ module.exports = function(RED) {
             });                 
             
             var options = {
-                device_id: this.creds.device_id,
+                device_id: this.creds.device_id, // TODO
                 scale: config.scale,
                 type: this.types
             };
@@ -191,53 +191,6 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get measurements",NetatmoGetMeasure);
-    /***************************************************************/
-    function NetatmoGetStationsData(config) {
-
-        RED.nodes.createNode(this,config);
-        this.creds = RED.nodes.getNode(config.creds);
-        var node = this;
-        this.on('input', function(msg) {
-            this.deviceId = msg.deviceId || config.deviceId || '';
-            this.getFavorites = msg.getFavorites || config.getFavorites || false;
-
-            var netatmo = require('netatmo');
-
-            var auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username, 
-                "password": this.creds.password
-            };
-            var api = new netatmo(auth);
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
-            
-            var options = {
-            };
-
-            if ((this.deviceId !== '')&&(this.deviceId !== null)){
-                options.device_id = this.deviceId;
-            }
-
-            if ((this.getFavorites !== false)&&(this.getFavorites !== null)){
-                options.get_favorites = this.getFavorites;
-            }
- 
-            api.getStationsData(options,function(err, devices) {
-                msg.payload = {devices:devices};
-                node.send(msg);
-            });
-        });
-
-    }
-    RED.nodes.registerType("get stations data",NetatmoGetStationsData);
     /***************************************************************/
     function NetatmoHomesData(config) {
 
@@ -287,38 +240,12 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("homes data",NetatmoHomesData);
 
-    // Discover homes with homesData
-	// eslint-disable-next-line no-unused-vars
-	RED.httpAdmin.get('/netatmo/homes', function(req, res, next)
-	{
-        const netatmo = require('netatmo');
-        const creds = req.query;
-        const auth = {
-            client_id: creds.client_id,
-            client_secret: creds.client_secret,
-            username: creds.username, 
-            password: creds.password
-        };
-		const api = new netatmo(auth);
-        api.on("error", function(error) {
-            res.end(JSON.stringify({error:error.message}));
-        });
-
-        api.on("warning", function(error) {
-            res.end(JSON.stringify({error:error.message}));
-        });
-
-        const options = {};
-        api.homesData(options,function(err, body) {
-            res.end(JSON.stringify(body));
-        });
-	});
-
     /***************************************************************/
 	function NetatmoHomeStatus(config) {
 
         RED.nodes.createNode(this,config);
-        this.creds = RED.nodes.getNode(config.creds);
+        RED.nodes.getNode(config.creds);
+
         var node = this;
         this.on('input', function(msg) {
             this.homeId = msg.homeId || config.homeId || '';
@@ -327,10 +254,10 @@ module.exports = function(RED) {
             var netatmo = require('netatmo');
 
             const auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username, 
-                "password": this.creds.password
+                "client_id": this.credentials.client_id,
+                "client_secret": this.credentials.client_secret,
+                "username": this.credentials.username, 
+                "password": this.credentials.password
             };
             var api = new netatmo(auth);
             
@@ -526,8 +453,8 @@ module.exports = function(RED) {
             var netatmo = require('netatmo');
 
             var auth = {
-                "client_id": this.creds.client_id, //"56e984c449c75fc1598b45c4",
-                "client_secret": this.creds.client_secret, //"X4l1Ct9GKPtlTjDC6piX2RAsKKe",
+                "client_id": this.creds.client_id,
+                "client_secret": this.creds.client_secret, 
                 "username": this.creds.username,
                 "password": this.creds.password
             };
@@ -564,14 +491,69 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("set person away",NetatmoSetPersonAway);
     /***************************************************************/
-    function NetatmoConfigNode(n) {
-        RED.nodes.createNode(this,n);
-        this.client_id = n.client_id;
-        this.client_secret = n.client_secret;
-        this.username = n.username;
-        this.password = n.password;
-        this.device_id = n.device_id;
-    }
-    RED.nodes.registerType("configNode",NetatmoConfigNode);
+    function NetatmoConfigNode(config) {
+        RED.nodes.createNode(this,config);
+        this.name = config.name;
+        this.deviceId = config.deviceId;
 
+        console.log(config.name);
+        console.log(config.client_id);
+        console.log(config.client_secret);
+        console.log(config.username);
+        console.log(config.password);
+        console.log(config.deviceId);
+    }
+
+    RED.nodes.registerType("configNode",NetatmoConfigNode,{
+        credentials: {
+            client_id: {type:"text"},
+            client_secret: {type:"text"},
+            username: {type:"text"},
+            password: {type:"password"},
+    }});
+
+    // Discover homes with homesData
+    // see https://github.com/node-red/node-red-nodes/blob/master/hardware/wemo/WeMoNG.html or /node-red-contrib-huemagic/huemagic/hue-brightness.html
+    // eslint-disable-next-line no-unused-vars
+	RED.httpAdmin.get('/netatmo/homes', function(req, res, next)
+	{
+        const netatmo = require('netatmo');
+        
+        const creds = RED.nodes.getNode(req.query.nodeIdCred);
+        if (!creds) {
+            res.end(JSON.stringify({error:'No configuration node found.'}));
+            return;
+        }
+
+        const credentials = creds.credentials;
+        if (!credentials) {
+            res.end(JSON.stringify({error:'No configuration found.'}));
+            return;
+        }
+
+        const auth = {
+            client_id: credentials.client_id,
+            client_secret: credentials.client_secret,
+            username: credentials.username, 
+            password: credentials.password
+        };
+
+        try { // falls der Constructor schief geht
+            const api = new netatmo(auth);
+            api.on("error", function(error) {
+                res.end(JSON.stringify({error:error.message}));
+            });
+
+            api.on("warning", function(error) {
+                res.end(JSON.stringify({error:error.message}));
+            });
+
+            const options = {};
+            api.homesData(options,function(err, body) {
+                res.end(JSON.stringify(body));
+            });
+        } catch(error) {
+            res.end(JSON.stringify({error:error.message}));
+        }
+	});   
 };

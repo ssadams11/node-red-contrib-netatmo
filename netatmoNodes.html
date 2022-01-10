@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+  
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -12,10 +14,105 @@
 -->
 
 <!-- *************************************************************  -->
+<!-- * Generic Functions *  -->
+<!-- *************************************************************  -->
+
+<script type="text/javascript">
+/* global $ RED */
+// eslint-disable-next-line no-unused-vars
+function oneditprepareDeviceId(required, typeFilter = null) {
+    $('#node-config-input-deviceId-scan').click(function()
+    {
+        const nodeIdCred = $('#node-input-creds option:selected').val();
+
+        const current = $('#node-config-input-deviceId').val();
+        $('#node-config-input-deviceId').replaceWith('<select id="node-config-input-deviceId" style="width: 100%"></select>');
+        $('#node-config-input-deviceId').append('<option selected="selected" value="null">Searching for devices...</option>');
+
+        $.get('netatmo/homes', {nodeIdCred:nodeIdCred})
+            .done( function(body) {
+                const data = JSON.parse(body);
+
+                if(data.error) {
+                    RED.notify(data.error, { type: "error" });
+                }
+                const homes = data.homes;
+                // RESET OPTIONS
+                $('#node-config-input-deviceId').empty();
+
+                if(homes.length <= 0) {
+                    // Create input
+                    $('#node-config-input-deviceId').replaceWith('<input type="text" id="node-config-input-deviceId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
+                    $('#node-config-input-deviceId').val(current);
+                    RED.notify("no homes found", { type: "error" });
+                } else {
+                    // Create select
+                    $('#node-config-input-deviceId').replaceWith('<select required id="node-config-input-deviceId" style="width: 100%"></select>');
+                    if (!required) {
+                        $('#node-config-input-deviceId').append('<option value="">(empty)</option>');
+                    }
+                    // SET modules AS OPTIONS
+                    homes.forEach(function(home) {
+                        if (home.modules.length >= 0) {
+                            home.modules.forEach(function(module) {
+                                if (!typeFilter || typeFilter === module.type) {
+                                    $('#node-config-input-deviceId').append('<option value="' + module.id + '">' + module.name + ' (' + module.type + ') - ' + module.id + '</option>');
+                                }
+                            });
+                        }
+                    });
+                    $('#node-config-input-deviceId').val(current);
+                }
+            });
+    });
+}
+
+function oneditprepareHomeId() {
+    $('#node-input-homeId-scan').click(function()
+    {
+        const nodeIdCred = $('#node-input-creds option:selected').val();
+
+        const current = $('#node-input-homeId').val();
+        $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
+        $('#node-input-homeId').append('<option selected="selected" value="null">Searching for homes...</option>');
+        
+        $.get('netatmo/homes', {nodeIdCred:nodeIdCred})
+            .done( function(body) {
+                const data = JSON.parse(body);
+
+                if(data.error) {
+                    RED.notify(data.error, { type: "error" });
+                }
+                const homes = data.homes;
+                // RESET OPTIONS
+                $('#node-input-homeId').empty();
+
+                if(homes.length <= 0) {
+                    // Create input
+                    $('#node-input-homeId').replaceWith('<input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
+                    $('#node-input-homeId').val(current);
+                    RED.notify("no home found", { type: "error" });
+                } else {
+                    // Create select
+                    $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
+                    $('#node-input-homeId').append('<option value="">(empty)</option>');
+                    // SET homes AS OPTIONS
+                    homes.forEach(function(home) {
+                        $('#node-input-homeId').append('<option value="' + home.id + '">' + home.name + '</option>');
+                    });
+                    $('#node-input-homeId').val(current);
+                }
+            });
+    });
+}
+
+</script>
+
+<!-- *************************************************************  -->
 
 <script type="text/javascript">
     console.log("registering netatmo get next events");
-    /* global RED, $ */
+    /* global RED */
     RED.nodes.registerType('get next events',{
         category: 'Netatmo',
         color: '#87A980',
@@ -281,54 +378,6 @@
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
-    console.log("registering netatmo get stations data");
-    RED.nodes.registerType('get stations data',{
-        category: 'Netatmo',
-        color: '#C0DEED',
-        defaults: {
-            name: {value:""},
-            deviceId: {value: ''},
-            getFavorites: {value: false},
-            creds: {value:"",type:"configNode"}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "font-awesome/fa-cloud",
-        label: function() {
-            return "get stations data";
-        }
-    });
-</script>
-
-<script type="text/x-red" data-template-name="get stations data">
-    <div class="form-row">
-        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
-        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
-    </div>
-    <div class="form-row">
-        <label for="node-input-deviceId" title="Weather station mac address."><i class="icon-tag"></i> Device ID</label>
-        <input type="text" id="node-input-deviceId" placeholder="70:ee:50:09:f0:xx">
-    </div>
-    <div class="form-row">
-        <label for="node-input-getFavorites" title="To retrieve user's favorite weather stations."><i class="icon-tag"></i> Get Favorites</label>
-        <input type="checkbox" id="node-input-getFavorites" placeholder="false">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="get stations data">
-   <p>This node returns the weather station's data associated with this username and credentials.</p>
-   <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
-   <b>msg.payload</b>. msg.payload is JSON.</p>
-   <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/weatherstation/getstationsdata</a> for details on format</p>
-</script>
-
-<!-- *************************************************************  -->
-
-<script type="text/javascript">
     console.log("registering netatmo get public data");
     RED.nodes.registerType('get public data',{
         category: 'Netatmo',
@@ -397,44 +446,6 @@
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
-    function oneditprepareHomeId() {
-        $('#node-input-homeId-scan').click(function()
-        {
-                var current = $('#node-input-homeId').val();
-                $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
-                $('#node-input-homeId').append('<option selected="selected" value="null">Searching for homes...</option>');
-
-                const creds = RED.nodes.node($('#node-input-creds option:selected').val());
-                $.get('netatmo/homes', {client_id: creds.client_id, client_secret: creds.client_secret, username: creds.username, password: creds.password})
-                    .done( function(body) {
-                        const data = JSON.parse(body);
-
-                        if(data.error) {
-                            RED.notify(data.error, { type: "error" });
-                        }
-                        const homes = data.homes;
-                        // RESET OPTIONS
-                        $('#node-input-homeId').empty();
-
-                        if(homes.length <= 0) {
-                            // Create input
-                            $('#node-input-homeId').replaceWith('<input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
-                            $('#node-input-homeId').val(current);
-                            RED.notify("no home found", { type: "error" });
-                        } else {
-                            // Create select
-                            $('#node-input-homeId').replaceWith('<select id="node-input-homeId" style="width: 100%"></select>');
-                            $('#node-input-homeId').append('<option value="">(empty)</option>');
-                            // SET homes AS OPTIONS
-                            homes.forEach(function(home) {
-                                $('#node-input-homeId').append('<option value="' + home.id + '">' + home.name + '</option>');
-                            });
-                            $('#node-input-homeId').val(current);
-                        }
-                    });
-        });
-    }
-
     // console.log("registering netatmo homes data");
     RED.nodes.registerType('homes data',{
         category: 'Netatmo',
@@ -452,6 +463,7 @@
             return this.name||"home data";
         },
         oneditprepare: function() {
+            // eslint-disable-next-line no-undef
             oneditprepareHomeId();
         }
     });
@@ -715,61 +727,22 @@
     // console.log("registering netatmo config node");
     RED.nodes.registerType('configNode',{
         category: 'config',
+        credentials: {
+            client_id: {type:"text"},
+            client_secret: {type:"text"},
+            username: {type:"text"},
+            password: {type:"password"}
+        },
         defaults: {
             name: {value:""},
-            client_id: {value:"",required:true},
-            client_secret: {value:"",required:true},
-            username: {value:"",required:true},
-            password: {value:"",required:true},
-            device_id: {value:"",required:true},
+            deviceId: {value:"",required:true},
         },
         label: function() {
-            return this.name||"netatmo device: "+this.device_id;
+            return this.name||"netatmo configNode";
         },
         oneditprepare: function() {
-            $('#node-config-input-device_id-scan').click(function()
-            {
-                var current = $('#node-config-input-device_id').val();
-                $('#node-config-input-device_id').replaceWith('<select id="node-config-input-device_id" style="width: 100%"></select>');
-                $('#node-config-input-device_id').append('<option selected="selected" value="null">Searching for devices...</option>');
-
-                const client_id = $('#node-config-input-client_id').val();
-                const client_secret = $('#node-config-input-client_secret').val();
-                const username = $('#node-config-input-username').val();
-                const password = $('#node-config-input-password').val();
-
-                $.get('netatmo/homes', {client_id: client_id, client_secret: client_secret, username: username, password: password})
-                    .done( function(body) {
-                        const data = JSON.parse(body);
-
-                        if(data.error) {
-                            RED.notify(data.error, { type: "error" });
-                        }
-                        const homes = data.homes;
-                        // RESET OPTIONS
-                        $('#node-config-input-device_id').empty();
-
-                        if(homes.length <= 0) {
-                            // Create input
-                            $('#node-config-input-device_id').replaceWith('<input type="text" id="node-config-input-device_id" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
-                            $('#node-config-input-device_id').val(current);
-                            RED.notify("no homes found", { type: "error" });
-                        } else {
-                            // Create select
-                            $('#node-config-input-device_id').replaceWith('<select required id="node-config-input-device_id" style="width: 100%"></select>');
-                            // $('#node-config-input-device_id').append('<option value="">(empty)</option>');
-                            // SET modules AS OPTIONS
-                            homes.forEach(function(home) {
-                                if (home.modules.length >= 0) {
-                                    home.modules.forEach(function(module) {
-                                        $('#node-config-input-device_id').append('<option value="' + module.id + '">' + module.name + ' (' + module.type + ')' + '</option>');
-                                    });
-                                }
-                            });
-                            $('#node-config-input-device_id').val(current);
-                        }
-                    });
-            });
+            // eslint-disable-next-line no-undef
+            oneditprepareDeviceId(true);
         }
     });
 </script>
@@ -781,7 +754,7 @@
     </div>
     <div class="form-tips"><b>Tip:</b> Client ID from App information page in your Netatmo connect Account</div><br/>
     <div class="form-row">
-        <label for="node-config-input-client_secret"><i class="icon-tag"></i> Client Secret</label>
+        <label for="node-config-input-client_secret"><i class="fa fa-tag"></i> Client Secret</label>
         <input required type="text" id="node-config-input-client_secret" placeholder="X4l1Ct9G....">
     </div>
     <div class="form-tips"><b>Tip:</b> Client secret from App information page in your Netatmo connect Account</div><br/>
@@ -792,20 +765,16 @@
     <div class="form-tips"><b>Tip:</b> User of your Netatmo connect Account</div><br/>
     <div class="form-row">
         <label for="node-config-input-password"><i class="fa fa-lock"></i> Password</label>
-        <input required type="text" id="node-config-input-password" placeholder="yourPassword">
+        <input required type="password" id="node-config-input-password" placeholder="yourPassword">
     </div>
     <div class="form-tips"><b>Tip:</b> Password of your Netatmo connect Account</div><br/>
-    <!--div class="form-row">
-        <label for="node-config-input-device_id"><i class="icon-tag"></i> Device ID</label>
-        <input required type="text" id="node-config-input-device_id" placeholder="70:ee:.....">
-    </div-->
     <div class="form-row">
-		<label for="node-config-input-device_id" title="id of device"><i class="fa fa-home"></i> Device ID</label>
+		<label for="node-config-input-deviceId" title="id of device"><i class="fa fa-home"></i> Device ID</label>
 		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
             <div style="position: absolute; left: 0px; right: 40px;">
-                <input type="text" id="node-config-input-device_id" placeholder="70:ee:....." style="width: 100%"/>
+                <input type="text" id="node-config-input-deviceId" placeholder="70:ee:....." style="width: 100%"/>
             </div>
-            <a id="node-config-input-device_id-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+            <a id="node-config-input-deviceId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
                 <i class="fa fa-search"></i>
             </a>
         </div>

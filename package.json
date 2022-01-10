@@ -10,7 +10,8 @@
     "url": "git+https://github.com/ssadams11/node-red-contrib-netatmo.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/",
+    "access": "public"
   },
   "dependencies": {
     "mustache": "2.2.1",
@@ -31,7 +32,8 @@
   "license": "Apache-2.0",
   "node-red": {
     "nodes": {
-      "netatmo": "netatmoNodes.js"
+      "netatmo": "netatmoNodes.js",
+      "netatmo-get-stations-data": "netatmo-get-stations-data.js"
     }
   },
   "maintainers": [

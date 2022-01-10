@@ -1,0 +1,90 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    /* global RED oneditprepareDeviceId */
+    RED.nodes.registerType('get stations data',{
+        category: 'Netatmo',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:""},
+            deviceId: {value: ''},
+            getFavorites: {value: false},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-cloud",
+        label: function() {
+            return this.name||"get stations data";
+        },
+        oneditprepare: function() {
+            oneditprepareDeviceId(false,'NAMain');
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="get stations data">
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+		<label for="node-config-input-deviceId" title="id of device"><i class="fa fa-home"></i> Device ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-config-input-deviceId" placeholder="70:ee:....." style="width: 100%"/>
+            </div>
+            <a id="node-config-input-deviceId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-tips"><b>Tip:</b> Can be left blank to get all your weather stations.</div>
+    <div class="form-row">
+        <label for="node-input-getFavorites"><i class="fa fa-star"></i> Get Favorites</label>
+        <input type="checkbox" id="node-input-getFavorites" placeholder="false">
+    </div>
+    <div class="form-tips"><b>Tip:</b> Retrieve user's favorite weather stations.</div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="get stations data">
+   <p>This node returns data from a user Weather Stations (measures and device specific data).</p>
+   <h3>Inputs</h3>
+
+   <dl class="message-properties">
+       <dt class="optional">msg.deviceId<span class="property-type">string</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Device ID.</dd>
+       <dt class="optional">msg.getFavorites<span class="property-type">bool</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Get Favorites property.</dd>
+   </dl>
+
+   <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">(object)</span>
+        </dt>
+        <dd>see netatmo api details</dd>
+    </dl>
+    <h3>Details</h3>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/weather#getstationsdata" target=_blank>https://dev.netatmo.com/apidocumentation/weather#getstationsdata</a> for details on format</p>
+</script>
