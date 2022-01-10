@@ -26,7 +26,7 @@
             scale: {value:"max"},
             types: {value:'Temperature,CO2,Humidity,Pressure,Noise'},
             creds: {value:"",type:"configNode"},
-            moduleId: {value: ''},
+            moduleId: {value: ''}, // optinal for weather, else required
             deviceId: {value: '',required:true},
         },
         inputs:1,
@@ -36,7 +36,7 @@
             return "get "+this.types+' measurements \n over '+this.scale||"get measurements";
         },
         oneditprepare: function() {
-            oneditprepareDeviceId(false,'NAMain');
+            oneditprepareDeviceId(true); // TODO: show only allowed devices
         }
     });
 </script>
