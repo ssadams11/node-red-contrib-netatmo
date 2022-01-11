@@ -202,7 +202,9 @@ function oneditpreparePersonId(required) {
 
 </script>
 
-<!-- *************************************************************  -->
+<!-- ************************************************************* 
+     * Api is marked as deprecated by netatmo 
+     ************************************************************* -->
 
 <script type="text/javascript">
     console.log("registering netatmo get next events");
@@ -225,26 +227,27 @@ function oneditpreparePersonId(required) {
     });
 </script>
 
-<script type="text/x-red" data-template-name="get next events">
+<script type="text/html" data-template-name="get next events">
     <div class="form-row">
         <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
         <label for="node-input-home_id"><i class="icon-tag"></i> Home ID:</label>
-        <input type="text" id="node-input-home_id" placeholder="577fff..."">
+        <input type="text" id="node-input-home_id" placeholder="577fff...">
     </div>
     <div class="form-row">
         <label for="node-input-event_id"><i class="icon-tag"></i> Event ID:</label>
         <input type="text" id="node-input-event_id" placeholder="57816...">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="get next events">
+<script type="text/html" data-help-name="get next events">
+    <p><b>Api is marked as deprecated by netatmo.</b></p>
    <p>This node returns information about the netatmo welcome next events with these credentials.</p>
    <p>Parameters:</p>
    <ul>
@@ -255,7 +258,10 @@ function oneditpreparePersonId(required) {
    <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/getnextevents" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/getnextevents</a> for details on format</p>
 </script>
-<!-- *************************************************************  -->
+
+<!-- ************************************************************* 
+     * Api is marked as deprecated by netatmo 
+     ************************************************************* -->
 
 <script type="text/javascript">
     console.log("registering netatmo get camera picture");
@@ -277,7 +283,7 @@ function oneditpreparePersonId(required) {
     });
 </script>
 
-<script type="text/x-red" data-template-name="get camera picture">
+<script type="text/html" data-template-name="get camera picture">
     <div class="form-row">
         <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
@@ -291,19 +297,21 @@ function oneditpreparePersonId(required) {
         <input type="text" id="node-input-key" placeholder="8627b4...">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="get camera picture">
+<script type="text/html" data-help-name="get camera picture">
+    <p><b>Api is marked as deprecated by netatmo.</b></p>
    <p>This node returns information about the netatmo welcome camera picture with these credentials.</p>
    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
    <b>msg.payload</b>. msg.payload is JSON.</p>
    <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicture" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/getcamerapicturer</a> for details on format</p>
 </script>
+
 <!-- ************************************************************* 
-     * Api is marked Deprecated by netatmo 
+     * Api is marked as deprecated by netatmo 
      ************************************************************* -->
 
 <script type="text/javascript">
@@ -330,13 +338,13 @@ function oneditpreparePersonId(required) {
         <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
 <script type="text/html" data-help-name="get home data">
-    <p><b>Api is marked Deprecated by netatmo!</b></p>
+    <p><b>Api is marked as deprecated by netatmo!</b></p>
     <p>This node returns information about the netatmo welcome home data with these credentials.</p>
     <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
     <b>msg.payload</b>. msg.payload is JSON.</p>
@@ -348,7 +356,6 @@ function oneditpreparePersonId(required) {
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
-    // console.log("registering netatmo config node");
     RED.nodes.registerType('configNode',{
         category: 'config',
         credentials: {
@@ -364,8 +371,6 @@ function oneditpreparePersonId(required) {
             return this.name||"netatmo configNode";
         },
         oneditprepare: function() {
-            // eslint-disable-next-line no-undef
-            oneditprepareDeviceId(true);
         }
     });
 </script>

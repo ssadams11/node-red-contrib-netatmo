@@ -25,15 +25,15 @@ module.exports = function(RED) {
         this.event_id = config.event_id;
         var node = this;
         this.on('input', function(msg) {
-            var netatmo = require('netatmo');
+            const netatmo = require('netatmo');
 
-            var auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username,  
-                "password": this.creds.password  
+            const auth = {
+                "client_id": this.creds.credentials.client_id,
+                "client_secret": this.creds.credentials.client_secret,
+                "username": this.creds.credentials.username, 
+                "password": this.creds.credentials.password
             };
-            var api = new netatmo(auth);
+            const api = new netatmo(auth);
             var options = {
                 home_id: node.home_id,
                 event_id: node.event_id
@@ -47,6 +47,7 @@ module.exports = function(RED) {
                 node.warn(error);
             });            
             
+            // Api is marked as deprecated by netatmo
             api.getNextEvents(options, function(err, events) {
                 msg.payload = events;
                 node.send(msg);
@@ -64,15 +65,15 @@ module.exports = function(RED) {
         this.key = config.key;
         var node = this;
         this.on('input', function(msg) {
-            var netatmo = require('netatmo');
+            const netatmo = require('netatmo');
 
-            var auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username,  
-                "password": this.creds.password  
+            const auth = {
+                "client_id": this.creds.credentials.client_id,
+                "client_secret": this.creds.credentials.client_secret,
+                "username": this.creds.credentials.username, 
+                "password": this.creds.credentials.password
             };
-            var api = new netatmo(auth);
+            const api = new netatmo(auth);
             
             api.on("error", function(error) {
                 node.error(error);
@@ -87,6 +88,7 @@ module.exports = function(RED) {
                 key: node.key
             };
 
+            // Api is marked as deprecated by netatmo
             api.getCameraPicture(options, function(err, picture) {
                 msg.payload = picture;
                 node.send(msg);
@@ -102,15 +104,15 @@ module.exports = function(RED) {
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
         this.on('input', function(msg) {
-            var netatmo = require('netatmo');
+            const netatmo = require('netatmo');
 
-            var auth = {
-                "client_id": this.creds.client_id,
-                "client_secret": this.creds.client_secret,
-                "username": this.creds.username,  
-                "password": this.creds.password  
+            const auth = {
+                "client_id": this.creds.credentials.client_id,
+                "client_secret": this.creds.credentials.client_secret,
+                "username": this.creds.credentials.username, 
+                "password": this.creds.credentials.password
             };
-            var api = new netatmo(auth);
+            const api = new netatmo(auth);
             
             api.on("error", function(error) {
                 node.error(error);
@@ -120,6 +122,7 @@ module.exports = function(RED) {
                 node.warn(error);
             });                 
             
+            // Api is marked as deprecated by netatmo
             api.getHomeData(function(err, data) {
                 msg.payload = data;
                 node.send(msg);
@@ -128,8 +131,7 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get home data",NetatmoGetHomeData);
-   /***************************************************************/
-   /***************************************************************/
+
     /***************************************************************/
     function NetatmoConfigNode(config) {
         RED.nodes.createNode(this,config);
