@@ -4,16 +4,20 @@
     "email": "ssadams@us.ibm.com"
   },
   "name": "node-red-contrib-netatmo",
-  "description": "Connect to Netatmo devices.  See http://netatmo.com, https://dev.netatmo.com/doc",
+  "description": "Connect to Netatmo devices.  See https://netatmo.com, https://dev.netatmo.com/apidocumentation",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ssadams11/node-red-contrib-netatmo.git"
   },
-  "dependencies": {
-    "netatmo": "git+http://github.com/floetenbaer/netatmo.git",
-    "mustache": "2.2.1"
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/",
+    "access": "public"
   },
-  "version": "0.2.0",
+  "dependencies": {
+    "mustache": "2.2.1",
+    "netatmo": "git+http://github.com/floetenbaer/netatmo.git"
+  },
+  "version": "0.3.0",
   "keywords": [
     "node-red",
     "netatmo",
@@ -28,7 +32,15 @@
   "license": "Apache-2.0",
   "node-red": {
     "nodes": {
-      "netatmo": "netatmoNodes.js"
+      "netatmo": "netatmoNodes.js",
+      "netatmo-set-person-away": "netatmo-set-person-away.js",
+      "netatmo-get-stations-data": "netatmo-get-stations-data.js",
+      "netatmo-get-public-data": "netatmo-get-public-data.js",
+      "netatmo-get-measurements": "netatmo-get-measurements.js",
+      "netatmo-home-status": "netatmo-home-status.js",
+      "netatmo-homes-data": "netatmo-homes-data.js",
+      "netatmo-set-room-therm-point": "netatmo-set-room-therm-point.js",
+      "netatmo-set-therm-mode": "netatmo-set-therm-mode.js"
     }
   },
   "maintainers": [
@@ -36,5 +48,13 @@
       "name": "Sam Adams",
       "email": "ssadms@us.ibm.com"
     }
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-html": "^6.2.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0"
+  }
 }

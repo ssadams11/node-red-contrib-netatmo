@@ -1,0 +1,97 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    /* global RED oneditprepareHomeId */
+    RED.nodes.registerType('homes data',{
+        category: 'Netatmo',
+        color: '#FFCC66',
+        defaults: {
+            name: {value:""},
+            homeId: {value: ''},
+			gatewayTypes: {value: ''},
+            creds: {value:"",type:"configNode"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-home",
+        label: function() {
+            return this.name||"home data";
+        },
+        oneditprepare: function() {
+            oneditprepareHomeId(false);
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="homes data">
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+		<label for="node-input-homeId" title="id of home"><i class="fa fa-home"></i> Home ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-homeId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-tips"><b>Tip:</b> can by left blank, use <code>msg.homeId</code></div><br/>
+    <div class="form-row">
+        <label for="node-input-gatewayTypes" title="Array of desired gateway"><i class="icon-tag"></i> Gateway Types</label>
+        <input type="text" id="node-input-gatewayTypes" placeholder="NAPlug | NATherm1 | NRV">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="homes data">
+   <p>This node returns user's homes and their topology for Home+Control, Home+Security and Energy devices.</p>
+   <h3>Inputs</h3>
+   <dl class="message-properties">
+       <dt class="optional">msg.homeId<span class="property-type">string</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Home ID.</dd>
+       <dt class="optional">msg.gatewayTypes<span class="property-type">string, array of strings</span>
+       </dt>
+       <dd>If specified the function will overwrite the node's Gateway Types.</dd>
+   </dl>
+   <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">(object)</span>
+        </dt>
+        <dd>see netatmo api details</dd>
+    </dl>
+    <h3>Details</h3>
+    <p>Home ID can be left blank, if <code>msg.homeId</code> is set.</p>
+    <p>Gateway Types an be left blank, if <code>msg.gatewayTypes</code> is set. Gateway Types are</p>
+    <ul>
+        <li>Home+Control : NLP, ...</li>
+        <li>Home+Security: NACamera, NOC, NSD, ...</li>
+        <li>Energy : NAPlug, NATherm1, NRV</li>
+    </ul>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/control#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/control#homesdata</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/security#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/security#homesdata</a> for details on format</p>
+
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/energy#homesdata" target=_blank>https://dev.netatmo.com/apidocumentation/energy#homesdata</a> for details on format</p>
+</script>

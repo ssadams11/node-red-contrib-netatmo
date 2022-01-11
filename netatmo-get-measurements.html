@@ -1,0 +1,139 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    /* global RED oneditprepareDeviceId */
+    RED.nodes.registerType('get measurements',{
+        category: 'Netatmo',
+        color: '#C0DEED',
+        defaults: {
+            name: {value:""},
+            beginDate: {value: ''},
+            endDate: {value: ''},
+            limit: {value: ''},
+            scale: {value:"max"},
+            types: {value:'Temperature,CO2,Humidity,Pressure,Noise'},
+            creds: {value:"",type:"configNode"},
+            moduleId: {value: ''}, // optinal for weather, else required
+            deviceId: {value: '',required:true},
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-cloud",
+        label: function() {
+            return this.name || "get "+this.types+' measurements over '+this.scale||"get measurements";
+        },
+        oneditprepare: function() {
+            oneditprepareDeviceId(true); // TODO: show only allowed devices
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="get measurements">
+</div>
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+		<label for="node-input-deviceId" title="id of device"><i class="fa fa-home"></i> Device ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input required type="text" id="node-input-deviceId" placeholder="70:ee:....." style="width: 100%"/>
+            </div>
+            <a id="node-input-deviceId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-row">
+        <label for="node-input-moduleId"><i class="fa fa-home"></i> Module ID</label>
+        <input type="text" id="node-input-moduleId" placeholder="70:ee:.....">
+    </div>
+    <div class="form-tips"><b>Tip:</b> Can be left blank to get all your devices.</div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-scale"><i class="fa fa-clock"></i> Scale</label>
+        <select id="node-input-scale" value="max">
+            <option value="max">max</option>
+            <option value="30min">30min</option>
+            <option value="1hour">1hour</option>
+            <option value="1day">1day</option>
+            <option value="1week">1week</option>
+            <option value="1month">1month</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-types" title="any mix of Temperature,CO2,Humidity,Pressure,Noise or {{payload...}}"><i class="fa a-thermometer-full"></i> Type</label>
+        <input type="text" id="node-input-types" value="Temperature,CO2,Humidity,Pressure,Noise">
+    </div>
+    <div class="form-row">
+        <label for="node-input-beginDate" title="millisecond count or {{payload...}}"><i class="fa fa-calendar-day"></i> Begin Date</label>
+        <input type="text" id="node-input-beginDate" placeholder="1471615887629">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endDate" title="millisecond count or {{payload...}}"><i class="fa fa-calendar-day"></i> End Date</label>
+        <input type="text" id="node-input-endDate" placeholder="last">
+    </div>
+    <div class="form-row">
+        <label for="node-input-limit" title="1..1024 or {{payload...}}"><i class="fa fa-arrowup"></i> Limit (max 1024)</label>
+        <input type="text" id="node-input-limit" placeholder="100">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="get measurements">
+    <p>This node returns (historical) measurements from a device or a module</p>
+    <p>Devices:
+
+https://dev.netatmo.com/apidocumentation/control#getmeasure
+read_magellan for Legrand Wiring device or Electrical panel products (consumption data)
+read_smarther for Smarther with Netatmo thermostat (boiler/cooler status)
+read_thermostat for Smart Modulating thermostat (boiler status)
+
+https://dev.netatmo.com/apidocumentation/energy#getmeasure
+
+NATherm1 for read_thermostat Smart Thermostat
+
+https://dev.netatmo.com/apidocumentation/weather#getmeasure
+
+read_station for Smart Home Weather Station
+
+    </p>
+    <h3>Inputs</h3>
+
+    <dl class="message-properties">
+        <dt class="optional">msg.deviceId<span class="property-type">string</span>
+        </dt>
+        <dd>If specified the function will overwrite the node's Device ID.</dd>
+        <dt class="optional">msg.getFavorites<span class="property-type">bool</span>
+        </dt>
+        <dd>If specified the function will overwrite the node's Get Favorites property.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">(object)</span>
+        </dt>
+        <dd>see netatmo api details</dd>
+    </dl>
+    <h3>Details</h3>
+    <p>Outputs an object called <b>msg</b> containing <b>msg.topic</b> and
+    <b>msg.payload</b>. msg.payload is JSON.</p>
+    <p>See <a href="https://dev.netatmo.com/apidocumentation/weather#getmeasure" target=_blank>https://dev.netatmo.com/apidocumentation/weather#getmeasure</a> for details on format</p>
+</script>
