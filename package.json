@@ -33,6 +33,7 @@
   "node-red": {
     "nodes": {
       "netatmo": "netatmoNodes.js",
+      "netatmo-set-person-away": "netatmo-set-person-away.js",
       "netatmo-get-stations-data": "netatmo-get-stations-data.js",
       "netatmo-get-public-data": "netatmo-get-public-data.js",
       "netatmo-get-measurements": "netatmo-get-measurements.js",

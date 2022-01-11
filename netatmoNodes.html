@@ -153,6 +153,53 @@ function oneditprepareRooms(required) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
+function oneditpreparePersonId(required) {
+    $('#node-input-personId-scan').click(function()
+    {
+        const nodeIdCred = $('#node-input-creds option:selected').val();
+
+        const current = $('#node-input-personId').val();
+        const currentHomeId = $('#node-input-homeId').val();
+        $('#node-input-personId').replaceWith('<select id="node-input-personId" style="width: 100%"></select>');
+        $('#node-input-personId').append('<option selected="selected" value="null">Searching for persons...</option>');
+        
+        $.get('netatmo/homes', {nodeIdCred:nodeIdCred})
+            .done( function(body) {
+                const data = JSON.parse(body);
+
+                if(data.error) {
+                    RED.notify(data.error, { type: "error" });
+                }
+                const homes = data.homes;
+                // RESET OPTIONS
+                $('#node-input-personId').empty();
+
+                if(homes.length <= 0) {
+                    // Create input
+                    $('#node-input-personId').replaceWith('<input type="text" id="node-input-personId" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" style="width: 100%"/>');
+                    $('#node-input-personId').val(current);
+                    RED.notify("no rooms found", { type: "error" });
+                } else {
+                    // Create select
+                    $('#node-input-personId').replaceWith('<select id="node-input-personId" style="width: 100%"></select>');
+                    if (!required) {
+                        $('#node-input-personId').append('<option value="">(blank)</option>');
+                    }                    
+                    // SET rooms AS OPTIONS
+                    homes.forEach(function(home) {
+                        if((currentHomeId === '' || home.id === currentHomeId) && home.persons) {
+                            home.persons.forEach(function(person) {
+                                $('#node-input-personId').append('<option value="' + person.id + '">' + person.pseudo + ' - ' + person.id + '</option>');
+                            });
+                        }
+                    });
+                    $('#node-input-personId').val(current);
+                }
+            });
+    });
+}
+
 </script>
 
 <!-- *************************************************************  -->
@@ -295,68 +342,6 @@ function oneditprepareRooms(required) {
     <b>msg.payload</b>. msg.payload is JSON.</p>
     <p>See <a href="https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata" target=_blank>https://dev.netatmo.com/dev/resources/technical/reference/welcome/gethomedata</a> for details on format</p>
 </script>
-
-<!-- *************************************************************  -->
-
-<script type="text/javascript">
-    console.log("registering netatmo set person away");
-    RED.nodes.registerType('set person away',{
-        category: 'Netatmo',
-        color: '#87A980',
-        defaults: {
-            name: {value:""},
-            creds: {value:"",type:"configNode"},
-            home_id: {value:""},
-            person_id: {value:""}	
-        },
-        inputs:1,
-        outputs:1,
-        icon: "font-awesome/fa-video-camera",
-        label: function() {
-            return this.name||"set person away";
-        }
-    });
-</script>
-
-<script type="text/x-red" data-template-name="set person away">
-    <div class="form-row">
-        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
-        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
-    </div>
-    <div class="form-row">
-        <label for="node-input-home_id"><i class="icon-tag"></i> Home ID:</label>
-        <input type="text" id="node-input-home_id" placeholder="577fff..."">
-    </div>
-    <div class="form-row">
-        <label for="node-input-person_id"><i class="icon-tag"></i> Person ID:</label>
-        <input type="text" id="node-input-person_id" placeholder="d1234... or not valued to set Home as Empty.">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="set person away">
-   <p>This node set person away or home empty.</p>
-   <p>Parameters:</p>
-   <ul>
-        <li>Home ID: something like 577fff842baa3c18948b4571</li>
-        <li>Person ID (optional): something like 766764b1-dcef-4321-b057-e0c8e2e329cf</li>
-   </ul>
-   <p>See <a href="https://dev.netatmo.com/apidocumentation/security#setpersonsaway" target=_blank>https://dev.netatmo.com/apidocumentation/security#setpersonsaway</a> for details on format</p>
-</script>
-
-<!-- *************************************************************  -->
-
-
-<!-- *************************************************************  -->
-
-
-<!-- *************************************************************  -->
-
-<!-- *************************************************************  -->
-
 
 <!-- *************************************************************  -->
 <!-- * Configuration Node *  -->

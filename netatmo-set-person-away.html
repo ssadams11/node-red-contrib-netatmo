@@ -1,0 +1,85 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    /* global RED oneditprepareHomeId oneditpreparePersonId */
+    RED.nodes.registerType('set person away',{
+        category: 'Netatmo',
+        color: '#87A980',
+        defaults: {
+            name: {value:""},
+            creds: {value:"",type:"configNode"},
+            home_id: {value:""}, // for backward compatibility only
+            person_id: {value:""}, // for backward compatibility only
+            homeId: {value:""},
+            personId: {value:""}	
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-video-camera",
+        label: function() {
+            return this.name||"set person away";
+        },
+        oneditprepare: function() {
+            oneditprepareHomeId(false);
+            oneditpreparePersonId(false);
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="set person away">
+    <div class="form-row">
+        <label for="node-input-creds"><i class="fa fa-server"></i> Creds</label>
+        <input type="text" id="node-input-creds" placeholder="Add netatmo creds">
+    </div>
+    <div class="form-row">
+		<label for="node-input-homeId" title="id of home"><i class="fa fa-home"></i> Home ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-homeId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-row">
+		<label for="node-input-personId" title="id of person"><i class="fa fa-user"></i> Person ID</label>
+		<div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-personId" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" style="width: 100%"/>
+            </div>
+            <a id="node-input-personId-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+	</div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="set person away">
+   <p>This node set person away or home empty.</p>
+   <p>Parameters:</p>
+   <ul>
+        <li>Home ID: something like 577fff842baa3c18948b4571</li>
+        <li>Person ID (optional): something like 766764b1-dcef-4321-b057-e0c8e2e329cf</li>
+        <li>If a Person ID is specified, that person will be set as "Away". If no person_id is specified, the Home will be set as "Empty".</li>
+   </ul>
+   <p>Home ID </p>
+   <p>See <a href="https://dev.netatmo.com/apidocumentation/security#setpersonsaway" target=_blank>https://dev.netatmo.com/apidocumentation/security#setpersonsaway</a> for details on format</p>
+</script>
