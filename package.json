@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "mustache": "2.2.1",
-    "netatmo": "git+http://github.com/floetenbaer/netatmo.git"
+    "netatmo": "github:karbassi/netatmo#update-packages"
   },
   "version": "0.3.0",
   "keywords": [
