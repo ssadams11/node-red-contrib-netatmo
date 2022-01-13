@@ -17,7 +17,8 @@ module.exports = function(RED)
 {
     "use strict";
     function NetatmoSetThermMode(config) {
-
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
+        
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
@@ -26,23 +27,10 @@ module.exports = function(RED)
             this.mode = msg.mode || config.mode || '';
             this.endtime = msg.endtime || config.endtime || '';
 			
-            const netatmo = require('netatmo');
-
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }           
             
             var options = {
                 home_id : this.homeId,

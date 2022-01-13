@@ -18,21 +18,19 @@ module.exports = function(RED)
     "use strict";
 
     function NetatmoSetPersonAway(config) {
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
+        
         RED.nodes.createNode(this, config);
         this.creds = RED.nodes.getNode(config.creds);
         this.homeId = config.homeId || config.home_id || '';
         this.personId = config.personId || config.person_id || '';
         var node = this;
         this.on('input', function (msg) {
-            const netatmo = require('netatmo');
 
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }
             var options = {
                 home_id: node.homeId,
                 person_id: node.personId
@@ -54,14 +52,6 @@ module.exports = function(RED)
                     options.person_id = msg.payload.personId;
                 }
             }
-
-            api.on("error", function (error) {
-                node.error(error);
-            });
-
-            api.on("warning", function (error) {
-                node.warn(error);
-            });
 
             api.setPersonAway(options, function (err, events) {
                 msg.payload = events;

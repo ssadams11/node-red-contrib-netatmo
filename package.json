@@ -10,7 +10,6 @@
     "url": "git+https://github.com/ssadams11/node-red-contrib-netatmo.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/",
     "access": "public"
   },
   "dependencies": {

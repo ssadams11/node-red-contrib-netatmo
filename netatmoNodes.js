@@ -18,6 +18,7 @@ module.exports = function(RED) {
 
     /***************************************************************/
     function NetatmoGetNextEvents(config) {
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
@@ -25,28 +26,17 @@ module.exports = function(RED) {
         this.event_id = config.event_id;
         var node = this;
         this.on('input', function(msg) {
-            const netatmo = require('netatmo');
 
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }
+
             var options = {
                 home_id: node.home_id,
                 event_id: node.event_id
             };
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });            
-            
+                       
             // Api is marked as deprecated by netatmo
             api.getNextEvents(options, function(err, events) {
                 msg.payload = events;
@@ -58,6 +48,7 @@ module.exports = function(RED) {
     RED.nodes.registerType("get next events",NetatmoGetNextEvents);
     /***************************************************************/
     function NetatmoGetCameraPicture(config) {
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
@@ -65,23 +56,11 @@ module.exports = function(RED) {
         this.key = config.key;
         var node = this;
         this.on('input', function(msg) {
-            const netatmo = require('netatmo');
-
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
             
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }            
             
             var options = {
                 image_id: node.image_id,
@@ -99,28 +78,17 @@ module.exports = function(RED) {
     RED.nodes.registerType("get camera picture",NetatmoGetCameraPicture);
     /***************************************************************/
     function NetatmoGetHomeData(config) {
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
         var node = this;
         this.on('input', function(msg) {
-            const netatmo = require('netatmo');
 
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }              
             
             // Api is marked as deprecated by netatmo
             api.getHomeData(function(err, data) {
@@ -168,7 +136,8 @@ module.exports = function(RED) {
             client_id: credentials.client_id,
             client_secret: credentials.client_secret,
             username: credentials.username, 
-            password: credentials.password
+            password: credentials.password,
+            "scope": '' // TODO: scope aus credentials befüllen
         };
 
         try { // falls der Constructor schief geht
