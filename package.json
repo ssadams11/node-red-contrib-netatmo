@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "mustache": "2.2.1",
-    "netatmo": "github:karbassi/netatmo#update-packages"
+    "netatmo": "github:karbassi/netatmo#feature/native-date"
   },
   "version": "0.3.0",
   "keywords": [
