@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+//@ts-check
+/***
+ * @typedef {Object} nrNodeExt Extensions for the nodeInstance object type
+ * @property {function} [context] get/set context data. Also .flow and .global contexts
+ * @property {function} [on] Event listeners for the node instance ('input', 'close')
+ * @property {function} [error] Error log output, also logs to the Editor's debug panel
+ * @property {function} [send] send a message
+ * @property {Object} [creds] credentials 
+ */
+
  const mustache = require('mustache');
  module.exports = function(RED)
  {
-     "use strict";
- 
+    "use strict";
+    /**
+     * @typedef {(NetatmoGetMeasure & nrNodeExt)} nrNode Combine NetatmoGetMeasure with additional, optional functions
+     * @this nrNode 
+     */
+    
     function NetatmoGetMeasure(config) {
         const {createNetatmoApifromCredentials} = require('./utils/api-helper');
-        
+
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
+        /** Copy 'this' object in case we need it in context of callbacks of other functions.
+         * @type nrNode
+         */
         var node = this;
         this.on('input', function(msg) {
             config.beginDate = msg.beginDate || config.beginDate || '';

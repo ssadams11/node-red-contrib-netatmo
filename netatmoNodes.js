@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+//@ts-check
+/***
+ * @typedef {Object} nrNodeExt Extensions for the nodeInstance object type
+ * @property {function} [context] get/set context data. Also .flow and .global contexts
+ * @property {function} [on] Event listeners for the node instance ('input', 'close')
+ * @property {function} [error] Error log output, also logs to the Editor's debug panel
+ * @property {function} [warn] log a warning message
+ * @property {function} [send] send a message
+ * @property {Object} [creds] credentials 
+ * 
+ */
 module.exports = function(RED) {
     "use strict";
 
-    /***************************************************************/
+    /**
+     * @typedef {(NetatmoGetNextEvents & nrNodeExt)} netatmoGetNextEventsNode Combine NetatmoGetNextEventsNode with additional, optional functions
+     * @this netatmoGetNextEventsNode 
+     */
     function NetatmoGetNextEvents(config) {
         const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
@@ -46,7 +60,11 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get next events",NetatmoGetNextEvents);
-    /***************************************************************/
+
+    /**
+     * @typedef {(NetatmoGetCameraPicture & nrNodeExt)} netatmoGetCameraPictureNode Combine NetatmoGetCameraPicture with additional, optional functions
+     * @this netatmoGetCameraPictureNode 
+     */
     function NetatmoGetCameraPicture(config) {
         const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
@@ -76,7 +94,11 @@ module.exports = function(RED) {
 
     }
     RED.nodes.registerType("get camera picture",NetatmoGetCameraPicture);
-    /***************************************************************/
+
+    /**
+     * @typedef {(NetatmoGetHomeData & nrNodeExt)} netatmoGetHomeData Combine NetatmoGetHomeData with additional, optional functions
+     * @this netatmoGetHomeData 
+     */
     function NetatmoGetHomeData(config) {
         const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
@@ -142,10 +164,11 @@ module.exports = function(RED) {
 
         try { // falls der Constructor schief geht
             const api = new netatmo(auth);
+            // @ts-ignore
             api.on("error", function(error) {
                 res.end(JSON.stringify({error:error.message}));
             });
-
+            // @ts-ignore
             api.on("warning", function(error) {
                 res.end(JSON.stringify({error:error.message}));
             });

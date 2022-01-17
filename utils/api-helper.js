@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
+//@ts-check
+/***
+ * @module utils/api-helper
+ *
+ * @typedef {Object} nrNodeExt Extensions for the nodeInstance object type
+ * @property {function} [context] get/set context data. Also .flow and .global contexts
+ * @property {function} [on] Event listeners for the node instance ('input', 'close')
+ * @property {function} [error] Error log output, also logs to the Editor's debug panel
+ * @property {function} [warn] log a warning message
+ * @property {function} [send] send a message
+ * @property {Object} [creds] credentials 
+ * 
+ */
 "use strict";
 
 module.exports = {
 	/**
+     * @param {nrNodeExt} node
+     * @return {netatmo} netatmo api.
 	 */
      createNetatmoApifromCredentials: function (node) {
         if (!node) {
@@ -43,10 +57,12 @@ module.exports = {
             try { // falls der Constructor schief geht
             const api = new netatmo(auth);
 
+            // @ts-ignore
             api.on("error", function(error) {
                 node.error(error);
             });
 
+            // @ts-ignore
             api.on("warning", function(error) {
                 node.warn(error);
             });

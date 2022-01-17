@@ -18,7 +18,13 @@
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
+//@ts-check
 /* global $ RED */
+/**
+ * @param {boolean} required
+ * @param {string} [typeFilter=null]
+ * @return {void}
+ */
 // eslint-disable-next-line no-unused-vars
 function oneditprepareDeviceId(required, typeFilter = null) {
     $('#node-input-deviceId-scan').click(function()
@@ -34,6 +40,7 @@ function oneditprepareDeviceId(required, typeFilter = null) {
                 const data = JSON.parse(body);
 
                 if(data.error) {
+                    //@ts-ignore
                     RED.notify(data.error, { type: "error" });
                 }
                 const homes = data.homes;
@@ -44,6 +51,7 @@ function oneditprepareDeviceId(required, typeFilter = null) {
                     // Create input
                     $('#node-input-deviceId').replaceWith('<input type="text" id="node-input-deviceId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
                     $('#node-input-deviceId').val(current);
+                    //@ts-ignore
                     RED.notify("no homes found", { type: "error" });
                 } else {
                     // Create select
@@ -81,6 +89,7 @@ function oneditprepareHomeId(required) {
                 const data = JSON.parse(body);
 
                 if(data.error) {
+                    //@ts-ignore
                     RED.notify(data.error, { type: "error" });
                 }
                 const homes = data.homes;
@@ -91,6 +100,7 @@ function oneditprepareHomeId(required) {
                     // Create input
                     $('#node-input-homeId').replaceWith('<input type="text" id="node-input-homeId" placeholder="5bXXXXXXXXXXXXXXXXXXXXXX" style="width: 100%"/>');
                     $('#node-input-homeId').val(current);
+                    //@ts-ignore
                     RED.notify("no home found", { type: "error" });
                 } else {
                     // Create select
@@ -122,6 +132,7 @@ function oneditprepareRooms(required) {
                 const data = JSON.parse(body);
 
                 if(data.error) {
+                    //@ts-ignore
                     RED.notify(data.error, { type: "error" });
                 }
                 const homes = data.homes;
@@ -132,6 +143,7 @@ function oneditprepareRooms(required) {
                     // Create input
                     $('#node-input-roomId').replaceWith('<input type="text" id="node-input-roomId" placeholder="xxxxxxxxxx" style="width: 100%"/>');
                     $('#node-input-roomId').val(current);
+                    //@ts-ignore
                     RED.notify("no rooms found", { type: "error" });
                 } else {
                     // Create select
@@ -169,6 +181,7 @@ function oneditpreparePersonId(required) {
                 const data = JSON.parse(body);
 
                 if(data.error) {
+                    //@ts-ignore
                     RED.notify(data.error, { type: "error" });
                 }
                 const homes = data.homes;
@@ -179,6 +192,7 @@ function oneditpreparePersonId(required) {
                     // Create input
                     $('#node-input-personId').replaceWith('<input type="text" id="node-input-personId" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" style="width: 100%"/>');
                     $('#node-input-personId').val(current);
+                    //@ts-ignore
                     RED.notify("no rooms found", { type: "error" });
                 } else {
                     // Create select
@@ -209,6 +223,7 @@ function oneditpreparePersonId(required) {
 <script type="text/javascript">
     console.log("registering netatmo get next events");
     /* global RED */
+    //@ts-ignore
     RED.nodes.registerType('get next events',{
         category: 'Netatmo',
         color: '#87A980',
@@ -264,7 +279,7 @@ function oneditpreparePersonId(required) {
      ************************************************************* -->
 
 <script type="text/javascript">
-    console.log("registering netatmo get camera picture");
+    //@ts-ignore
     RED.nodes.registerType('get camera picture',{
         category: 'Netatmo',
         color: '#87A980',
@@ -315,7 +330,7 @@ function oneditpreparePersonId(required) {
      ************************************************************* -->
 
 <script type="text/javascript">
-    console.log("registering netatmo get home data");
+    //@ts-ignore
     RED.nodes.registerType('get home data',{
         category: 'Netatmo',
         color: '#87A980',
@@ -356,6 +371,7 @@ function oneditpreparePersonId(required) {
 <!-- *************************************************************  -->
 
 <script type="text/javascript">
+    //@ts-ignore
     RED.nodes.registerType('configNode',{
         category: 'config',
         credentials: {
