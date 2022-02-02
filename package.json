@@ -14,12 +14,13 @@
   },
   "dependencies": {
     "mustache": "2.2.1",
-    "netatmo": "github:karbassi/netatmo#feature/native-date"
+    "netatmo": "github:karbassi/netatmo#feature/unit-tests"
   },
-  "version": "0.3.0",
+  "version": "0.3.1",
   "keywords": [
     "node-red",
     "netatmo",
+    "velux",
     "camera",
     "tags",
     "sensors",

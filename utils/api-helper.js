@@ -30,7 +30,7 @@
 
 module.exports = {
 	/**
-     * @param {nrNodeExt} node
+     * @param {nrNodeExt} node the configuration nnode
      * @return {netatmo} netatmo api.
 	 */
      createNetatmoApifromCredentials: function (node) {
@@ -50,7 +50,8 @@ module.exports = {
             "client_secret": credentials.client_secret,
             "username": credentials.username, 
             "password": credentials.password,
-            "scope": '' // TODO: scope aus credentials befüllen
+            "scope": credentials.scope,
+            "user_prefix": credentials.user_prefix,
         };
 
         const netatmo = require('netatmo');

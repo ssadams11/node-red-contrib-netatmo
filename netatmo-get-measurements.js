@@ -37,9 +37,7 @@
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
-        /** Copy 'this' object in case we need it in context of callbacks of other functions.
-         * @type nrNode
-         */
+
         var node = this;
         this.on('input', function(msg) {
             config.beginDate = msg.beginDate || config.beginDate || '';

@@ -378,7 +378,9 @@ function oneditpreparePersonId(required) {
             client_id: {type:"text"},
             client_secret: {type:"text"},
             username: {type:"text"},
-            password: {type:"password"}
+            password: {type:"password"},
+            scope: {type:"text"},
+            user_prefix: {type:"text"},
         },
         defaults: {
             name: {value:""}
@@ -387,6 +389,17 @@ function oneditpreparePersonId(required) {
             return this.name||"netatmo configNode";
         },
         oneditprepare: function() {
+            $("#node-config-input-user_prefix").typedInput({
+                types: [
+                    {
+                        value: $('#node-config-input-user_prefix').val(),
+                        options: [
+                            { value: "", label: "netamo"},
+                            { value: "velux", label: "velux active with netatmo"},
+                        ]
+                    }
+                ]
+            })
         }
     });
 </script>
@@ -412,6 +425,14 @@ function oneditpreparePersonId(required) {
         <input required type="password" id="node-config-input-password" placeholder="yourPassword">
     </div>
     <div class="form-tips"><b>Tip:</b> Password of your Netatmo connect Account</div><br/>
+    <div class="form-row">
+        <label for="node-config-input-scope"><i class="fa fa-tag"></i> Scope</label>
+        <input type="text" id="node-config-input-scope" placeholder="Scope">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-user_prefix"><i class="fa fa-tag"></i> UserPrefix</label>
+        <input type="text" id="node-config-input-user_prefix">
+    </div>
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">

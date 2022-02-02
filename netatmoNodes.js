@@ -133,6 +133,8 @@ module.exports = function(RED) {
             client_secret: {type:"text"},
             username: {type:"text"},
             password: {type:"password"},
+            scope: {type:"text"},
+            user_prefix: {type:"text"},
     }});
 
     // Discover homes with homesData
@@ -159,7 +161,8 @@ module.exports = function(RED) {
             client_secret: credentials.client_secret,
             username: credentials.username, 
             password: credentials.password,
-            "scope": '' // TODO: scope aus credentials befüllen
+            scope: credentials.scope,
+            user_prefix: credentials.user_prefix,
         };
 
         try { // falls der Constructor schief geht
