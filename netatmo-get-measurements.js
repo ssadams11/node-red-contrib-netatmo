@@ -13,15 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+//@ts-check
+/***
+ * @typedef {Object} nrNodeExt Extensions for the nodeInstance object type
+ * @property {function} [context] get/set context data. Also .flow and .global contexts
+ * @property {function} [on] Event listeners for the node instance ('input', 'close')
+ * @property {function} [error] Error log output, also logs to the Editor's debug panel
+ * @property {function} [send] send a message
+ * @property {Object} [creds] credentials 
+ */
+
  const mustache = require('mustache');
  module.exports = function(RED)
  {
-     "use strict";
- 
+    "use strict";
+    /**
+     * @typedef {(NetatmoGetMeasure & nrNodeExt)} nrNode Combine NetatmoGetMeasure with additional, optional functions
+     * @this nrNode 
+     */
+    
     function NetatmoGetMeasure(config) {
+        const {createNetatmoApifromCredentials} = require('./utils/api-helper');
 
         RED.nodes.createNode(this,config);
         this.creds = RED.nodes.getNode(config.creds);
+
         var node = this;
         this.on('input', function(msg) {
             config.beginDate = msg.beginDate || config.beginDate || '';
@@ -38,23 +54,10 @@
             this.moduleId = mustache.render(config.moduleId, msg);
             this.deviceId = mustache.render(config.deviceId, msg);
 
-            const netatmo = require('netatmo');
-
-            const auth = {
-                "client_id": this.creds.credentials.client_id,
-                "client_secret": this.creds.credentials.client_secret,
-                "username": this.creds.credentials.username, 
-                "password": this.creds.credentials.password
-            };
-            const api = new netatmo(auth);
-            
-            api.on("error", function(error) {
-                node.error(error);
-            });
-
-            api.on("warning", function(error) {
-                node.warn(error);
-            });                 
+            const api = createNetatmoApifromCredentials(node);
+            if (!api) {
+                return;
+            }            
             
             var options = {
                 device_id: this.deviceId,

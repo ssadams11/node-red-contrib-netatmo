@@ -2,7 +2,21 @@
 
 ## [Unreleased](https://github.com/ssadams11/node-red-contrib-netatmo/tree/HEAD)
 
-[Full Changelog](https://github.com/ssadams11/node-red-contrib-netatmo/compare/v0.2.0...HEAD)
+[Full Changelog](https://github.com/ssadams11/node-red-contrib-netatmo/compare/v0.3.0...HEAD)
+
+**Closed issues:**
+
+- Security issue [\#20](https://github.com/ssadams11/node-red-contrib-netatmo/issues/20)
+- NPM Package Update [\#18](https://github.com/ssadams11/node-red-contrib-netatmo/issues/18)
+- Netatmo Presence not shown [\#15](https://github.com/ssadams11/node-red-contrib-netatmo/issues/15)
+
+**Merged pull requests:**
+
+- Development [\#21](https://github.com/ssadams11/node-red-contrib-netatmo/pull/21) ([floetenbaer](https://github.com/floetenbaer))
+
+## [v0.3.0](https://github.com/ssadams11/node-red-contrib-netatmo/tree/v0.3.0) (2022-01-11)
+
+[Full Changelog](https://github.com/ssadams11/node-red-contrib-netatmo/compare/v0.2.0...v0.3.0)
 
 **Closed issues:**
 
